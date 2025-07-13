@@ -32,8 +32,8 @@ class AdminProfilController extends Controller
         ]);
 
         if($request->hasFile('foto')){
-            if($user->foto){
-                unlink('.' .Storage::url($user->foto));
+            if($user->foto && Storage::disk('public')->exists($user->foto)){
+                Storage::disk('public')->delete($user->foto);
             }
             $path       = 'img-profil/';
             $file       = $request->file('foto');

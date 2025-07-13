@@ -104,8 +104,8 @@ class AdminAnggaranController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
-            if ($anggaran->gambar) {
-                unlink('.' . Storage::url($anggaran->gambar));
+            if ($anggaran->gambar && Storage::disk('public')->exists($anggaran->gambar)) {
+                Storage::disk('public')->delete($anggaran->gambar);
             }
             $path       = 'img-anggaran/';
             $file       = $request->file('gambar');
@@ -144,7 +144,9 @@ class AdminAnggaranController extends Controller
     public function destroy(string $id)
     {
         $anggaran = Anggaran::find($id);
-        unlink('.' . Storage::url($anggaran->gambar));
+        if($anggaran && $anggaran->gambar && Storage::disk('public')->exists($anggaran->gambar)){
+            Storage::disk('public')->delete($anggaran->gambar);
+        }
         $anggaran->delete();
 
         return redirect()->back()->with('success', 'Berhasil menghapus data !');

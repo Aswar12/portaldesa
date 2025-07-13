@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <a href="/admin/wilayah/{{ $wilayah->id }}/edit" type="button" class="btn btn-warning mb-1 float-end"><i class="ti ti-edit"></i> Edit Sejarah</a>
+            <a href="/admin/wilayah/{{ $wilayah->id }}/edit" type="button" class="btn btn-warning mb-1 float-end"><i class="ti ti-edit"></i> Edit Wilayah</a>
         </div>
       </div>
     </div>

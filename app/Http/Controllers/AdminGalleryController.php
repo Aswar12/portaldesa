@@ -84,33 +84,27 @@ class AdminGalleryController extends Controller
     {
         $gallery = Gallery::find($id);
         $validator = Validator::make($request->all(), [
+            'gambar'       => 'mimes:png,jpg,jpeg',
             'keterangan'   => 'required'
         ], [
+            'gambar.mimes'          => 'Format yang di izinkan png,jpg,jpeg !',
             'keterangan.required'   => 'Form wajib di,'
         ]);
 
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $gambar = $gallery->gambar;
         if ($request->hasFile('gambar')) {
-            if ($gallery->gambar) {
-                unlink('.' . Storage::url($gallery->gambar));
+            if ($gallery->gambar && Storage::disk('public')->exists($gallery->gambar)) {
+                Storage::disk('public')->delete($gallery->gambar);
             }
             $path       = 'img-gallery/';
             $file       = $request->file('gambar');
             $extension  = $file->getClientOriginalExtension();
             $fileName   = uniqid() . '.' . $extension;
             $gambar     = $file->storeAs($path, $fileName, 'public');
-        } else {
-            $validator = Validator::make($request->all(), [
-                'gambar'       => 'mimes:png,jpg,jpeg',
-                'keterangan'   => 'required'
-            ], [
-                'gambar.mimes'          => 'Format yang di izinkan png,jpg,jpeg !',
-                'keterangan.required'   => 'Form wajib di,'
-            ]);
-            $gambar = $gallery->gambar;
-        }
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
         }
 
         $gallery->update([
@@ -127,7 +121,9 @@ class AdminGalleryController extends Controller
     public function destroy(string $id)
     {
         $gallery = Gallery::find($id);
-        unlink('.' . Storage::url($gallery->gambar));
+        if($gallery && $gallery->gambar && Storage::disk('public')->exists($gallery->gambar)){
+            Storage::disk('public')->delete($gallery->gambar);
+        }
         $gallery->delete();
 
         return redirect()->back()->with('success', 'Berhasil menghapus data');

@@ -154,3 +154,5 @@ Route::resource('/admin/pengumuman', AdminAnnouncementController::class);
 
 Route::get('/admin/apbdes', [AdminAnggaranController::class, 'slug']);
 Route::resource('/admin/apbdes', AdminAnggaranController::class);
+
+Route::get('/penduduk/dashboard', [App\Http\Controllers\PendudukController::class, 'dashboard'])->name('penduduk.dashboard');

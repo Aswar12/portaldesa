@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Website Portal Desa Cibuni</title>
+  <title>Website Portal {{ $nm_desa }}</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 

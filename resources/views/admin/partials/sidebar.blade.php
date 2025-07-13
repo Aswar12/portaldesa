@@ -3,7 +3,7 @@
     <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
             <a href="/" class="text-nowrap logo-img my-2">
-                <img src="{{ asset('storage/' . $logo->logo) }}" alt="Logo" width="200">
+                <img src="{{ asset('storage/' . $logo->logo) }}" alt="Logo" style="max-width: 100%; max-height: 60px; width: auto; height: auto; display: block; margin: 0 auto; object-fit: contain; background: transparent; border-radius: 8px; border: 1px solid #eee;">
             </a>
             <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                 <i class="ti ti-x fs-8"></i>

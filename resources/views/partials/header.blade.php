@@ -27,6 +27,7 @@
                         <li><a href="/berita">Berita</a></li>
                         <li><a href="/gallery">Gallery</a></li>
                         <li><a href="/apbdesa">APBDesa</a></li>
+                        <li><a href="{{ route('penduduk.dashboard') }}">Penduduk</a></li>
                     </ul>
                 </li>
                 <li><a class="nav-link scrollto" href="/umkm">Umkm</a></li>

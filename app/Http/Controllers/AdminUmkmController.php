@@ -122,8 +122,8 @@ class AdminUmkmController extends Controller
         }
 
         if ($request->hasFile('foto')) {
-            if ($umkm->foto) {
-                unlink('.' . Storage::url($umkm->foto));
+            if ($umkm->foto && Storage::disk('public')->exists($umkm->foto)) {
+                Storage::disk('public')->delete($umkm->foto);
             }
             $path       = 'img-produk/';
             $file       = $request->file('foto');
@@ -174,7 +174,9 @@ class AdminUmkmController extends Controller
     public function destroy($id)
     {
         $umkm = Umkm::find($id);
-        unlink('.' . Storage::url($umkm->foto));
+        if($umkm && $umkm->foto && Storage::disk('public')->exists($umkm->foto)){
+            Storage::disk('public')->delete($umkm->foto);
+        }
         $umkm->delete();
 
         return redirect('/admin/umkm')->with('success', 'Berhasil menghapus produk umkm');

@@ -97,8 +97,8 @@ class AdminPerangkatDesaController extends Controller
         ]);
 
         if($request->hasFile('foto')){
-            if($perangkatDesa->foto){
-                unlink('.' .Storage::url($perangkatDesa->foto));
+            if($perangkatDesa->foto && Storage::disk('public')->exists($perangkatDesa->foto)){
+                Storage::disk('public')->delete($perangkatDesa->foto);
             }
             $path       = 'img-perangkat/';
             $file       = $request->file('foto');
@@ -139,7 +139,9 @@ class AdminPerangkatDesaController extends Controller
      */
     public function destroy(PerangkatDesa $perangkatDesa)
     {
-        unlink('.'.Storage::url($perangkatDesa->foto));
+        if($perangkatDesa && $perangkatDesa->foto && Storage::disk('public')->exists($perangkatDesa->foto)){
+            Storage::disk('public')->delete($perangkatDesa->foto);
+        }
         $perangkatDesa->delete();
 
         return redirect('/admin/perangkat-desa')->with('success', 'Berhasil menghapus data perangkat desa');

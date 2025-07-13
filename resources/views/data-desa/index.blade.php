@@ -102,7 +102,7 @@
 
       <div class="row my-4">
         <div class="section-title">
-            <h2>Data Pekerjaan</h2>
+            <h2>Data berdasarkan Kelompok Umur</h2>
         </div>
         <div class="col-lg-4">
             <div class="card">
@@ -145,9 +145,54 @@
             </div>
         </div>
       </div>
+
+      <hr>
+
+     <div class="row my-4">
+        <div class="section-title">
+            <h2>Data Pekerjaan</h2>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th scope="col">Pekerjaan</th>
+                                    <th scope="col">jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pekerjaans as $pekerjaan)
+                                <tr>
+                                    <td>{{ $pekerjaan->pekerjaan }}</td>
+                                    <td>{{ $pekerjaan->jumlah }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot class="table-warning">
+                                <tr>
+                                    <td>Total </td>
+                                    <td>{{ $totalPekerjaan }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>                    
+                </div>
+            </div>
+        </div>
     
-      
-    </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <canvas id="byusiaChart" style="max-height: 400px; overflow: auto;"></canvas>
+                    </div>                          
+                </div>
+            </div>
+        </div>
+      </div>
   </section>
   
 
@@ -242,6 +287,33 @@
         }
     });
 </script>
+
+<script>
+    const ctxPekerjaan = document.getElementById('byusiaChart');
+    
+    const labelPekerjaan  = {!! $labelPekerjaan !!};
+    const dataPekerjaan   = {!! $jumlahPekerjaan !!};
+
+    new Chart(ctxPekerjaan, {
+        type: 'polarArea',
+        data: {
+            labels: labelPekerjaan,
+            datasets: [{
+                label: 'Jumlah Pekerjaan',
+                data: dataPekerjaan,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(75, 192, 192)',
+                    'rgb(255, 205, 86)',
+                    'rgb(201, 203, 207)',
+                    'rgb(54, 162, 235)'
+                ],
+                hoverOffset: 4
+            }]
+        }
+    });
+</script>
+
 
   
 @endsection

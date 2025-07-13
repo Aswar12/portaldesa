@@ -131,8 +131,8 @@ class AdminBeritaController extends Controller
         }
 
         if($request->hasFile('gambar')){
-            if($berita->gambar){
-                unlink('.' .Storage::url($berita->gambar));
+            if($berita->gambar && Storage::disk('public')->exists($berita->gambar)){
+                Storage::disk('public')->delete($berita->gambar);
             }
             $path       = 'img-berita/';
             $file       = $request->file('gambar');
@@ -182,7 +182,9 @@ class AdminBeritaController extends Controller
     public function destroy($id)
     {
         $berita = Berita::find($id);
-        unlink('.'.Storage::url($berita->gambar));
+        if($berita && $berita->gambar && Storage::disk('public')->exists($berita->gambar)){
+            Storage::disk('public')->delete($berita->gambar);
+        }
         $berita->delete();
 
         return redirect('/admin/berita')->with('success', 'Berhasil menghapus berita');

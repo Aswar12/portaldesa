@@ -49,7 +49,7 @@ class AdminSliderController extends Controller
         ]);
     
         if($request->hasFile('img_slider')){
-            if($slider->img_slider){
+            if($slider->img_slider && Storage::disk('public')->exists($slider->img_slider)){
                 Storage::disk('public')->delete($slider->img_slider);
             }
     
@@ -88,6 +88,19 @@ class AdminSliderController extends Controller
         ]);
     
         return redirect('/admin/slider')->with('success', 'Berhasil memperbarui slider');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        $slider = Slider::find($id);
+        if($slider && $slider->img_slider && Storage::disk('public')->exists($slider->img_slider)){
+            Storage::disk('public')->delete($slider->img_slider);
+        }
+        $slider->delete();
+        return redirect('/admin/slider')->with('success', 'Berhasil menghapus slider');
     }
 
 }
