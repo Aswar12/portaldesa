@@ -23,7 +23,7 @@ class PendudukController extends Controller
             ->get();
 
         $agamaLabels = $dataAgamaJenisKelaminRaw->pluck('agama_nama')->unique()->values()->all();
-        $jenisKelaminLabels = $dataAgamaJenisKelaminRaw->pluck('jenis_kelamin_nama')->unique()->values()->all();
+        $jenisKelaminLabels = ['Laki-laki', 'Perempuan']; // fixed gender labels for consistency
 
         $dataAgamaJenisKelamin = [
             'labels' => $agamaLabels,
@@ -37,11 +37,9 @@ class PendudukController extends Controller
                 'backgroundColor' => $jk === 'Laki-laki' ? 'rgba(54, 162, 235, 0.7)' : 'rgba(255, 99, 132, 0.7)',
             ];
             foreach ($agamaLabels as $agama) {
-                $count = $dataAgamaJenisKelaminRaw->firstWhere('agama_nama', $agama)
-                    && $dataAgamaJenisKelaminRaw->firstWhere('jenis_kelamin_nama', $jk)
-                    ? $dataAgamaJenisKelaminRaw->where('agama_nama', $agama)->where('jenis_kelamin_nama', $jk)->first()->total
-                    : 0;
-                $dataSet['data'][] = $count;
+                $count = $dataAgamaJenisKelaminRaw->where('agama_nama', $agama)->where('jenis_kelamin_nama', $jk)->first();
+                $countValue = $count ? $count->total : 0;
+                $dataSet['data'][] = $countValue;
             }
             $dataAgamaJenisKelamin['datasets'][] = $dataSet;
         }
@@ -71,30 +69,53 @@ class PendudukController extends Controller
         $dataUsiaJenisKelaminRaw = [];
 
         foreach ($penduduks as $penduduk) {
-            $age = $penduduk->ttl ? $now->diffInYears($penduduk->ttl) : 0;
+            if ($penduduk->ttl && strtotime($penduduk->ttl)) {
+                $age = $now->diffInYears($penduduk->ttl);
+            } else {
+                $age = null;
+            }
             $jenisKelamin = $penduduk->jenisKelamin->nama ?? 'Unknown';
 
-            if ($age <= 4) $ageGroup = '0-4';
-            elseif ($age <= 9) $ageGroup = '5-9';
-            elseif ($age <= 14) $ageGroup = '10-14';
-            elseif ($age <= 19) $ageGroup = '15-19';
-            elseif ($age <= 24) $ageGroup = '20-24';
-            elseif ($age <= 29) $ageGroup = '25-29';
-            elseif ($age <= 34) $ageGroup = '30-34';
-            elseif ($age <= 39) $ageGroup = '35-39';
-            elseif ($age <= 44) $ageGroup = '40-44';
-            elseif ($age <= 49) $ageGroup = '45-49';
-            elseif ($age <= 54) $ageGroup = '50-54';
-            elseif ($age <= 59) $ageGroup = '55-59';
-            elseif ($age <= 64) $ageGroup = '60-64';
-            elseif ($age <= 69) $ageGroup = '65-69';
-            else $ageGroup = '70+';
+            if (is_null($age)) {
+                $ageGroup = 'Unknown';
+            } elseif ($age <= 4) {
+                $ageGroup = '0-4';
+            } elseif ($age <= 9) {
+                $ageGroup = '5-9';
+            } elseif ($age <= 14) {
+                $ageGroup = '10-14';
+            } elseif ($age <= 19) {
+                $ageGroup = '15-19';
+            } elseif ($age <= 24) {
+                $ageGroup = '20-24';
+            } elseif ($age <= 29) {
+                $ageGroup = '25-29';
+            } elseif ($age <= 34) {
+                $ageGroup = '30-34';
+            } elseif ($age <= 39) {
+                $ageGroup = '35-39';
+            } elseif ($age <= 44) {
+                $ageGroup = '40-44';
+            } elseif ($age <= 49) {
+                $ageGroup = '45-49';
+            } elseif ($age <= 54) {
+                $ageGroup = '50-54';
+            } elseif ($age <= 59) {
+                $ageGroup = '55-59';
+            } elseif ($age <= 64) {
+                $ageGroup = '60-64';
+            } elseif ($age <= 69) {
+                $ageGroup = '65-69';
+            } else {
+                $ageGroup = '70+';
+            }
 
             $dataUsiaJenisKelaminRaw[] = ['ageGroup' => $ageGroup, 'jenisKelamin' => $jenisKelamin];
         }
 
         $ageLabels = array_keys($ageGroups);
-        $jenisKelaminLabelsUsia = $penduduks->pluck('jenisKelamin.nama')->unique()->values()->all();
+        $ageLabels[] = 'Unknown'; // add Unknown age group label
+        $jenisKelaminLabelsUsia = ['Laki-laki', 'Perempuan']; // fixed gender labels for consistency
 
         $dataUsiaJenisKelamin = [
             'labels' => $ageLabels,
@@ -119,16 +140,17 @@ class PendudukController extends Controller
 
         // Data for Pekerjaan and Jenis Kelamin
         $dataPekerjaanJenisKelaminRaw = Penduduk::select(
-                'pekerjaan',
+                DB::raw("COALESCE(NULLIF(pekerjaan, ''), 'Tidak Bekerja') as pekerjaan"),
                 'jenis_kelamins.jenis_kelamin as jenis_kelamin_nama',
                 DB::raw('count(*) as total')
             )
             ->join('jenis_kelamins', 'penduduks.jenis_kelamin_id', '=', 'jenis_kelamins.id')
             ->groupBy('pekerjaan', 'jenis_kelamins.jenis_kelamin')
+            ->orderBy('pekerjaan')
             ->get();
 
         $pekerjaanLabels = $dataPekerjaanJenisKelaminRaw->pluck('pekerjaan')->unique()->values()->all();
-        $jenisKelaminLabelsPekerjaan = $dataPekerjaanJenisKelaminRaw->pluck('jenis_kelamin_nama')->unique()->values()->all();
+        $jenisKelaminLabelsPekerjaan = ['Laki-laki', 'Perempuan']; // fixed gender labels for consistency
 
         $dataPekerjaanJenisKelamin = [
             'labels' => $pekerjaanLabels,

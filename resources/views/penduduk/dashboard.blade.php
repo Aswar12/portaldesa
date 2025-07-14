@@ -10,12 +10,12 @@
     </div>
 
     <div class="mb-5">
-        <h3>Jumlah Penduduk berdasarkan Usia dan Jenis Kelamin (Horizontal Bar Chart)</h3>
+        <h3>Jumlah Penduduk berdasarkan Usia dan Jenis Kelamin</h3>
         <canvas id="chartUsiaJenisKelamin"></canvas>
     </div>
 
     <div class="mb-5">
-        <h3>Jumlah Penduduk berdasarkan Pekerjaan dan Jenis Kelamin (Grouped Bar Chart)</h3>
+        <h3>Jumlah Penduduk berdasarkan Pekerjaan dan Jenis Kelamin</h3>
         <canvas id="chartPekerjaanJenisKelamin"></canvas>
     </div>
 </div>
@@ -58,14 +58,14 @@
         }
     });
 
-    // Chart for Usia and Jenis Kelamin - Horizontal Bar Chart
+    // Chart for Usia and Jenis Kelamin - Grouped Vertical Bar Chart
     const ctxUsiaJenisKelamin = document.getElementById('chartUsiaJenisKelamin').getContext('2d');
 
     const usiaLabels = dataUsiaJenisKelamin.labels;
 
     const datasetsUsia = dataUsiaJenisKelamin.datasets.map(ds => ({
         label: ds.label,
-        data: ds.data.map(val => Math.round(val)),
+        data: ds.data,
         backgroundColor: colors[ds.label] || colors['Unknown']
     }));
 
@@ -76,18 +76,17 @@
             datasets: datasetsUsia
         },
         options: {
-            indexAxis: 'y',
             responsive: true,
             plugins: {
                 legend: { position: 'top' },
                 title: { display: true, text: 'Jumlah Penduduk berdasarkan Usia dan Jenis Kelamin' }
             },
             scales: {
-                x: {
+                y: {
                     beginAtZero: true,
                     title: { display: true, text: 'Jumlah' }
                 },
-                y: {
+                x: {
                     title: { display: true, text: 'Kelompok Usia' }
                 }
             }
