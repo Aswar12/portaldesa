@@ -1,8 +1,12 @@
+
 <?php
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\AdminPendudukController;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UmkmController;
 use App\Http\Controllers\BeritaController;
@@ -53,6 +57,7 @@ use App\Http\Controllers\AdminIdentitasSitusController;
 |
 */
 
+
 Route::get('/', [BerandaController::class, 'index']);
 
 Route::get('/berita/{beritas:slug}', [BeritaController::class, 'berita']);
@@ -89,7 +94,7 @@ Route::get('/pengumuman/{pengumuman:slug}', [AnnouncementController::class, 'det
 
 Route::get('/apbdesa', [AnggaranController::class, 'index']);
 Route::get('/apbdesa/{anggaran:slug}', [AnggaranController::class, 'detail']);
-
+Route::get('/penduduk/dashboard', [App\Http\Controllers\PendudukController::class, 'dashboard'])->name('penduduk.dashboard');
 //Admin Dashboard 
 Auth::routes();
 
@@ -155,4 +160,14 @@ Route::resource('/admin/pengumuman', AdminAnnouncementController::class);
 Route::get('/admin/apbdes', [AdminAnggaranController::class, 'slug']);
 Route::resource('/admin/apbdes', AdminAnggaranController::class);
 
-Route::get('/penduduk/dashboard', [App\Http\Controllers\PendudukController::class, 'dashboard'])->name('penduduk.dashboard');
+
+
+Route::get('admin/penduduk', [AdminPendudukController::class, 'index'])->name('admin.penduduk.index');
+Route::get('admin/penduduk/create', [AdminPendudukController::class, 'create'])->name('admin.penduduk.create');
+Route::post('admin/penduduk', [AdminPendudukController::class, 'store'])->name('admin.penduduk.store');
+Route::get('admin/penduduk/{penduduk}', [AdminPendudukController::class, 'show'])->name('admin.penduduk.show');
+Route::get('admin/penduduk/{penduduk}/edit', [AdminPendudukController::class, 'edit'])->name('admin.penduduk.edit');
+Route::put('admin/penduduk/{penduduk}', [AdminPendudukController::class, 'update'])->name('admin.penduduk.update');
+Route::delete('admin/penduduk/{penduduk}', [AdminPendudukController::class, 'destroy'])->name('admin.penduduk.destroy');
+
+Route::post('admin/penduduk/import', [AdminPendudukController::class, 'importFromExcel'])->name('admin.penduduk.import');

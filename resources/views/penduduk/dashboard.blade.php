@@ -21,6 +21,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <script>
     const dataAgamaJenisKelamin = @json($dataAgamaJenisKelamin);
     const dataUsiaJenisKelamin = @json($dataUsiaJenisKelamin);
@@ -58,7 +59,7 @@
         }
     });
 
-    // Chart for Usia and Jenis Kelamin - Grouped Vertical Bar Chart
+    // Chart for Usia and Jenis Kelamin - Horizontal Bar Chart with Data Labels
     const ctxUsiaJenisKelamin = document.getElementById('chartUsiaJenisKelamin').getContext('2d');
 
     const usiaLabels = dataUsiaJenisKelamin.labels;
@@ -76,22 +77,64 @@
             datasets: datasetsUsia
         },
         options: {
+            indexAxis: 'y',
             responsive: true,
             plugins: {
                 legend: { position: 'top' },
-                title: { display: true, text: 'Jumlah Penduduk berdasarkan Usia dan Jenis Kelamin' }
+                title: { display: true, text: 'Jumlah Penduduk berdasarkan Usia dan Jenis Kelamin' },
+                datalabels: {
+                    anchor: function(context) {
+                        return context.dataset.label === 'Laki-laki' ? 'start' : 'end';
+                    },
+                    align: function(context) {
+                        return context.dataset.label === 'Laki-laki' ? 'left' : 'right';
+                    },
+                    color: '#444',
+                    font: { weight: 'bold' },
+                    formatter: function(value) {
+                        return Math.abs(Math.round(value));
+                    }
+                }
             },
             scales: {
-                y: {
-                    beginAtZero: true,
-                    title: { display: true, text: 'Jumlah' }
-                },
                 x: {
+                    stacked: true,
+                    beginAtZero: true,
+                    title: { display: true, text: 'Jumlah' },
+                    min: -Math.max(...datasetsUsia.map(ds => Math.max(...ds.data))) * 1.5,
+                    max: Math.max(...datasetsUsia.map(ds => Math.max(...ds.data))) * 1.5,
+                    ticks: {
+                        stepSize: 10,
+                        callback: function(value) {
+                            return Math.abs(value);
+                        }
+                    }
+                },
+                y: {
+                    stacked: true,
                     title: { display: true, text: 'Kelompok Usia' }
                 }
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'y',
+                intersect: false
             }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // Adjust datasets for mirrored effect
+    chartUsiaJenisKelamin.data.datasets.forEach(dataset => {
+        if (dataset.label === 'Laki-laki') {
+            dataset.data = dataset.data.map(value => -value);
         }
     });
+    chartUsiaJenisKelamin.update();
 
     // Chart for Pekerjaan and Jenis Kelamin - Grouped Bar Chart
     const ctxPekerjaanJenisKelamin = document.getElementById('chartPekerjaanJenisKelamin').getContext('2d');

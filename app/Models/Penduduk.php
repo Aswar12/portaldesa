@@ -9,7 +9,19 @@ class Penduduk extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'nama',
+        'nik',
+        'kk',
+        'ttl',
+        'jenis_kelamin_id',
+        'alamat',
+        'agama_id',
+        'pekerjaan_id',
+        'status_perkawinan',
+        'kewarganegaraan',
+        'status_dlm_keluarga',
+    ];
 
     public function agama()
     {
@@ -19,5 +31,10 @@ class Penduduk extends Model
     public function jenisKelamin()
     {
         return $this->belongsTo(JenisKelamin::class);
+    }
+
+    public function pekerjaan()
+    {
+        return $this->belongsTo(Pekerjaan::class);
     }
 }

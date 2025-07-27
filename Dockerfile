@@ -1,5 +1,5 @@
 # Dockerfile for Laravel 10+ (PHP 8.2, Composer, Node.js)
-FROM php:8.1-fpm
+FROM php:8.3-fpm
 
 # Install system dependencies
 RUN apt-get update \
@@ -34,6 +34,7 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 RUN npm install && npm run build
 
 # Set permissions
+RUN mkdir -p /var/www/storage
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www/storage
 
 EXPOSE 9000

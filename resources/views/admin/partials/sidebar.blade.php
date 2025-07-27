@@ -225,6 +225,15 @@
                                 <span class="hide-menu">ApbDES</span>
                             </a>
                         </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/penduduk" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-point"></i>
+                                </span>
+                                <span class="hide-menu">Penduduk</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

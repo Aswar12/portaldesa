@@ -37,6 +37,14 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="year" class="form-label">Tahun</label>
+                            <input type="number" class="form-control" name="year" id="year" value="{{ old('year') }}" placeholder="Masukkan Tahun">
+                            @error('year')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <button type="submit" class="btn btn-primary m-1 float-end">Simpan</button>
                     </form>
                 </div>

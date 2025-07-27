@@ -17,6 +17,21 @@
                 </div>
 
                 <div class="card-body">
+                    <form method="GET" action="{{ url('/admin/gallery') }}" class="mb-3">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-auto">
+                                <label for="year" class="col-form-label">Filter Tahun:</label>
+                            </div>
+                            <div class="col-auto">
+                                <input type="number" name="year" id="year" class="form-control" placeholder="Masukkan Tahun" value="{{ old('year', $filterYear) }}">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                                <a href="{{ url('/admin/gallery') }}" class="btn btn-secondary">Reset</a>
+                            </div>
+                        </div>
+                    </form>
+
                     @if (session()->has('success'))
                         <div class="alert alert-success" role="alert">
                             {{ session('success') }}
@@ -31,6 +46,7 @@
                                         <th>No</th>
                                         <th>Gambar</th>
                                         <th>Keterangan</th>
+                                        <th>Tahun</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -41,6 +57,7 @@
                                             <td><img src="{{ asset('storage/' . $gallery->gambar) }}" alt="Foto Gallery"
                                                     class="img-fluid" style="max-height: 200px; max-width: 200px"></td>
                                             <td>{{ $gallery->keterangan }}</td>
+                                            <td>{{ $gallery->year ?? '-' }}</td>
                                             <td>
                                                 <a href="/admin/gallery/{{ $gallery->id }}/edit" type="button"
                                                     class="btn btn-warning mb-1"><i class="ti ti-edit"></i></a>

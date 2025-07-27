@@ -14,10 +14,19 @@ class AdminGalleryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Gallery::query();
+
+        if ($request->has('year') && $request->year != '') {
+            $query->where('year', $request->year);
+        }
+
+        $gallerys = $query->get();
+
         return view('admin.gallery.index', [
-            'gallerys'  => Gallery::all()
+            'gallerys'  => $gallerys,
+            'filterYear' => $request->year ?? ''
         ]);
     }
 
@@ -36,11 +45,13 @@ class AdminGalleryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'gambar'       => 'required|mimes:png,jpg,jpeg',
-            'keterangan'   => 'required'
+            'keterangan'   => 'required',
+            'year'         => 'nullable|integer'
         ], [
             'gambar.required'       => 'Form wajib di isi !',
             'gambar.mimes'          => 'Format yang di izinkan png,jpg,jpeg !',
-            'keterangan.required'   => 'Form wajib di,'
+            'keterangan.required'   => 'Form wajib di,',
+            'year.integer'          => 'Tahun harus berupa angka'
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -60,6 +71,7 @@ class AdminGalleryController extends Controller
         Gallery::create([
             'gambar'       => $gambar,
             'keterangan'   => $request->keterangan,
+            'year'         => $request->year,
             'user_id'      => auth()->user()->id,
         ]);
 
@@ -85,10 +97,12 @@ class AdminGalleryController extends Controller
         $gallery = Gallery::find($id);
         $validator = Validator::make($request->all(), [
             'gambar'       => 'mimes:png,jpg,jpeg',
-            'keterangan'   => 'required'
+            'keterangan'   => 'required',
+            'year'         => 'nullable|integer'
         ], [
             'gambar.mimes'          => 'Format yang di izinkan png,jpg,jpeg !',
-            'keterangan.required'   => 'Form wajib di,'
+            'keterangan.required'   => 'Form wajib di,',
+            'year.integer'          => 'Tahun harus berupa angka'
         ]);
 
         if ($validator->fails()) {
@@ -109,7 +123,8 @@ class AdminGalleryController extends Controller
 
         $gallery->update([
             'gambar'        => $gambar,
-            'keterangan'    => $request->keterangan
+            'keterangan'    => $request->keterangan,
+            'year'          => $request->year
         ]);
 
         return redirect('/admin/gallery')->with('success', 'Berhasil memperbarui data gallery');

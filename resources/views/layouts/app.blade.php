@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Authentication - Website Portal Desa Cibuni</title>
-  <link rel="shortcut icon" type="image/png" href="admin/assets/images/logos/favicon.png" />
+  <title>Authentication - Website {{ $nm_desa }}</title>
+  <link rel="shortcut icon" type="image/png" href="{{ asset('storage/' . $logo->logo) }}" />
   <link rel="stylesheet" href="admin/assets/css/styles.min.css" />
 </head>
 
@@ -25,8 +25,8 @@
       </div>
     </div>
   </div>
-  <script src="admin/assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('admin/assets/libs/jquery/dist/jquery.min.js') }}"></script>
+  <script src="{{ asset('admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 </body>
 
 </html>
