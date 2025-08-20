@@ -20,7 +20,6 @@
               <li><i class="bx bx-chevron-right"></i> <a href="/">Beranda</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="/berita">Berita</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="/umkm">Umkm</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="/data-desa">Data Desa</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="/kontak">Kontak Kami</a></li>
             </ul>
           </div>
@@ -43,7 +42,7 @@
 
     <div class="container">
       <div class="copyright">
-        &copy; Copyright <strong><span>2025</span></strong>. || Repost By : <a href="https://www.youtube.com/@kaseps8304/videos">Kasep_Code</a>
+        &copy; Copyright <strong><span>{{ date('Y') }}</span></strong> Portal Desa {{ $nm_desa ?? 'Antarkanmaa' }}. All Rights Reserved.
       </div>
     </div>
   </footer><!-- End Footer -->

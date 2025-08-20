@@ -78,6 +78,10 @@ class AdminBeritaController extends Controller
                 ->withInput();
         }
 
+        $createdAt = $request->published_at 
+            ? \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura')
+            : now()->tz('Asia/Jayapura');
+        
         $berita = Berita::create([
             'judul'         =>  $request->judul,
             'slug'          =>  $request->slug,
@@ -86,7 +90,8 @@ class AdminBeritaController extends Controller
             'excerpt'       =>  Str::limit(strip_tags($request->body), 100),
             'user_id'       =>  auth()->user()->id,
             'status_id'     =>  $request->status_id,
-            'kategori_id'   =>  $request->kategori_id
+            'kategori_id'   =>  $request->kategori_id,
+            'created_at'    =>  $createdAt
         ]);
 
         return redirect('/admin/berita')->with('success', 'Berhasil menambahkan data berita');
@@ -161,6 +166,10 @@ class AdminBeritaController extends Controller
                 ->withInput();
         };
 
+        $createdAt = $request->published_at 
+            ? \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura')
+            : $berita->created_at;
+
         $berita->update([
             'judul'         => $request->judul,
             'slug'          => $request->slug,
@@ -169,7 +178,8 @@ class AdminBeritaController extends Controller
             'excerpt'       => Str::limit(strip_tags($request->body), 100),
             'user_id'       => auth()->user()->id,
             'status_id'     => $request->status_id,
-            'kategori_id'   => $request->kategori_id
+            'kategori_id'   => $request->kategori_id,
+            'created_at'    => $createdAt
         ]);
 
         return redirect('/admin/berita')->with('success', 'Berhasil memperbarui berita');

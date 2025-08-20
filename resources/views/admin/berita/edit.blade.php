@@ -96,6 +96,16 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="published_at" class="form-label">Tanggal Post (WIT) <small class="text-muted">(Opsional)</small></label>
+                            <input type="datetime-local" class="form-control" name="published_at" id="published_at" 
+                                   value="{{ old('published_at', $berita->created_at ? $berita->created_at->timezone('Asia/Jayapura')->format('Y-m-d\TH:i') : now()->timezone('Asia/Jayapura')->format('Y-m-d\TH:i')) }}">
+                            <small class="text-muted">Kosongkan untuk menggunakan waktu saat ini (Waktu Indonesia Timur)</small>
+                            @error('published_at')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <button type="submit" class="btn btn-primary m-1 float-end">Update</button>
                     </div>
                </div>

@@ -237,6 +237,66 @@
                     </ul>
                 </li>
 
+                <!-- Menu Infografis -->
+                <li class="sidebar-item">
+                    <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
+                        <span class="d-flex">
+                            <i class="ti ti-chart-pie"></i>
+                        </span>
+                        <span class="hide-menu">Infografis</span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse first-level">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/apbdes" aria-expanded="false">
+                                <div class="round-16 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-point"></i>
+                                </div>
+                                <span class="hide-menu">APBDes</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/penduduk" aria-expanded="false">
+                                <div class="round-16 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-point"></i>
+                                </div>
+                                <span class="hide-menu">Penduduk</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/stunting" aria-expanded="false">
+                                <div class="round-16 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-point"></i>
+                                </div>
+                                <span class="hide-menu">Stunting</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/idm" aria-expanded="false">
+                                <div class="round-16 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-point"></i>
+                                </div>
+                                <span class="hide-menu">IDM</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/sdgs" aria-expanded="false">
+                                <div class="round-16 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-point"></i>
+                                </div>
+                                <span class="hide-menu">SDGS</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/bansos" aria-expanded="false">
+                                <div class="round-16 d-flex align-items-center justify-content-center">
+                                    <i class="ti ti-point"></i>
+                                </div>
+                                <span class="hide-menu">Bansos</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
 
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="/admin/kontak " aria-expanded="false">

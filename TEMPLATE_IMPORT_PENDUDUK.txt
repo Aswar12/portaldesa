@@ -1,0 +1,29 @@
+Template Excel Import Data Penduduk
+
+Format yang diperlukan:
+================================
+
+Kolom-kolom yang harus ada di Excel:
+1. NO - Nomor urut
+2. NO. KK - Nomor Kartu Keluarga
+3. NIK - Nomor Induk Kependudukan
+4. NAMA - Nama lengkap penduduk
+5. JENIS KELAMIN - LAKI-LAKI atau PEREMPUAN
+6. TEMPAT LAHIR - Tempat kelahiran
+7. TANGGAL LAHIR - Format: dd - MMM - yyyy (contoh: 19 - Jul - 1986)
+8. AGAMA - ISLAM, KATHOLIK, KRISTEN, HINDU, BUDDHA, KONGHUCHU
+9. PEKERJAAN - Jenis pekerjaan
+10. STATUS DLM KELUARGA - Status dalam keluarga
+11. UMUR - Akan dihitung otomatis dari tanggal lahir
+12. ALAMAT - Alamat lengkap
+
+Contoh data:
+NO | NO. KK | NIK | NAMA | JENIS KELAMIN | TEMPAT LAHIR | TANGGAL LAHIR | AGAMA | PEKERJAAN | STATUS DLM KELUARGA | UMUR | ALAMAT
+1 | 9109012701120047 | 9109011907860010 | ABRAHAM WEMAF | LAKI-LAKI | OHOINOL | 19 - Jul - 1986 | KATHOLIK | WIRASWASTA | KEPALA KELUARGA | 39 TAHUN | RT 01
+
+Catatan:
+- File harus dalam format .xlsx atau .xls
+- Pastikan header kolom sesuai dengan format di atas
+- NIK wajib diisi dan unik
+- Tanggal lahir menggunakan format "dd - MMM - yyyy"
+- Umur akan dihitung otomatis, tidak perlu input manual

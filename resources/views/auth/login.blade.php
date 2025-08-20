@@ -28,8 +28,9 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login') }}" id="loginForm">
                     @csrf
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}" id="csrf-token-input">
                     <div class="mb-3">
                         <label for="email" class="form-label fw-bold">Email</label>
                         <input type="email" id="email" class="form-control" name="email" value="{{ old('email') }}"

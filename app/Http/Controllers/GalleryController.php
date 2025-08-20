@@ -11,15 +11,30 @@ class GalleryController extends Controller
     {
         $query = Gallery::query();
 
+        // Get available years from database
+        $availableYears = Gallery::whereNotNull('year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
         if ($request->has('year') && $request->year != '') {
             $query->where('year', $request->year);
         }
 
-        $galerrys = $query->orderBy('id', 'DESC')->paginate(12);
+        // Sorting
+        if ($request->sort == 'oldest') {
+            $query->orderBy('published_at', 'asc');
+        } else {
+            $query->orderBy('published_at', 'desc');
+        }
+
+        $galerrys = $query->paginate(12)->withQueryString();
 
         return view('gallery.index', [
             'galerrys'  => $galerrys,
-            'filterYear' => $request->year ?? ''
+            'availableYears' => $availableYears,
+            'selectedYear' => $request->year,
+            'selectedSort' => $request->sort ?? 'latest'
         ]);
     }
 }

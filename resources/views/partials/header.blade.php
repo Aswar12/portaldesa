@@ -18,16 +18,35 @@
                         <li><a class="{{ request()->is('visi-misi') ? 'active' : '' }}" href="/visi-misi">Visi & Misi</a></li>
                         <li><a class="{{ request()->is('perangkat-desa') ? 'active' : '' }}" href="/perangkat-desa">Perangkat Desa</a></li>
                         <li><a class="{{ request()->is('peta-desa') ? 'active' : '' }}" href="/peta-desa">Peta Desa</a></li>
-                        <li><a class="{{ request()->is('data-desa') ? 'active' : '' }}" href="/data-desa">Data Desa</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a class="{{ request()->is('pengumuman*') || request()->is('berita*') || request()->is('gallery*') || request()->is('apbdesa*') || request()->is('penduduk/dashboard') ? 'active' : '' }}" href="#"><span>Informasi</span> <i class="bi bi-chevron-down"></i></a>
+                <li class="dropdown"><a class="{{ request()->is('pengumuman*') || request()->is('berita*') || request()->is('gallery*') || request()->is('penduduk/dashboard') ? 'active' : '' }}" href="#"><span>Informasi</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
                         <li><a class="{{ request()->is('pengumuman*') ? 'active' : '' }}" href="/pengumuman">Pengumuman</a></li>
                         <li><a class="{{ request()->is('berita*') ? 'active' : '' }}" href="/berita">Berita</a></li>
                         <li><a class="{{ request()->is('gallery*') ? 'active' : '' }}" href="/gallery">Gallery</a></li>
-                        <li><a class="{{ request()->is('apbdesa*') ? 'active' : '' }}" href="/apbdesa">APBDesa</a></li>
-                        <li><a class="{{ request()->routeIs('penduduk.dashboard') ? 'active' : '' }}" href="{{ route('penduduk.dashboard') }}">Penduduk</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="{{ request()->is('idm*') || request()->is('infografis*') ? 'active' : '' }}" href="#"><span>Infografis</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a class="{{ request()->is('infografis/penduduk*') ? 'active' : '' }}" href="{{ route('infografis.penduduk') }}">
+                            <i class="fas fa-users me-2"></i>Penduduk
+                        </a></li>
+                        <li><a class="{{ request()->is('infografis/apbdes*') ? 'active' : '' }}" href="{{ route('infografis.apbdes') }}">
+                            <i class="fas fa-money-bill-wave me-2"></i>APBDes
+                        </a></li>
+                        <li><a class="{{ request()->is('infografis/stunting*') ? 'active' : '' }}" href="{{ route('infografis.stunting') }}">
+                            <i class="fas fa-child me-2"></i>Stunting
+                        </a></li>
+                        <li><a class="{{ request()->is('infografis/bansos*') ? 'active' : '' }}" href="{{ route('infografis.bansos') }}">
+                            <i class="fas fa-hand-holding-heart me-2"></i>Bansos
+                        </a></li>
+                        <li><a class="{{ request()->is('idm*') ? 'active' : '' }}" href="{{ route('idm.index') }}">
+                            <i class="fas fa-chart-line me-2"></i>IDM
+                        </a></li>
+                        <li><a class="{{ request()->is('infografis/sdgs*') ? 'active' : '' }}" href="{{ route('infografis.sdgs') }}">
+                            <i class="fas fa-globe me-2"></i>SDGs
+                        </a></li>
                     </ul>
                 </li>
                 <li><a class="nav-link scrollto" href="/umkm">Umkm</a></li>

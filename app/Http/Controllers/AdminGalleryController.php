@@ -46,12 +46,14 @@ class AdminGalleryController extends Controller
         $validator = Validator::make($request->all(), [
             'gambar'       => 'required|mimes:png,jpg,jpeg',
             'keterangan'   => 'required',
-            'year'         => 'nullable|integer'
+            'year'         => 'nullable|integer',
+            'published_at' => 'nullable|date'
         ], [
             'gambar.required'       => 'Form wajib di isi !',
             'gambar.mimes'          => 'Format yang di izinkan png,jpg,jpeg !',
             'keterangan.required'   => 'Form wajib di,',
-            'year.integer'          => 'Tahun harus berupa angka'
+            'year.integer'          => 'Tahun harus berupa angka',
+            'published_at.date'     => 'Format tanggal tidak valid'
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -68,11 +70,16 @@ class AdminGalleryController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        $published_at = $request->published_at 
+            ? \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura')
+            : now()->tz('Asia/Jayapura');
+
         Gallery::create([
             'gambar'       => $gambar,
             'keterangan'   => $request->keterangan,
             'year'         => $request->year,
             'user_id'      => auth()->user()->id,
+            'published_at' => $published_at
         ]);
 
         return redirect('/admin/gallery')->with('success', 'Berhasil menambahkan informasi layanan baru');

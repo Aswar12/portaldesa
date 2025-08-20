@@ -38,10 +38,6 @@
 
     <div class="row">
       <div class="col-lg-3 col-md-6 icon-box" data-aos="fade-up">
-        <div class="icon"><i class="bi bi-bar-chart-line-fill"></i></div>
-        <h4 class="title"><a href="/data-desa">Statistik</a></h4>
-      </div>
-      <div class="col-lg-3 col-md-6 icon-box" data-aos="fade-up">
         <div class="icon"><i class="bi bi-globe-asia-australia"></i></div>
         <h4 class="title"><a href="/peta-desa">Peta Desa</a></h4>
       </div>

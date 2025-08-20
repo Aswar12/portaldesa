@@ -25,8 +25,47 @@
   <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
+  
+  <!-- Additional Styles -->
+  @yield('styles')
+  
+  <!-- Custom IDM Menu Style -->
+  <style>
+    .navbar .nav-link.scrollto:hover .fas,
+    .navbar .nav-link.scrollto.active .fas {
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .navbar .nav-link.scrollto[href*="idm"] {
+      background: linear-gradient(45deg, #007bff, #00c6ff);
+      color: white !important;
+      border-radius: 20px;
+      padding: 8px 15px !important;
+      margin: 0 5px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,123,255,0.3);
+    }
+    
+    .navbar .nav-link.scrollto[href*="idm"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,123,255,0.5);
+    }
+    
+    .navbar .nav-link.scrollto[href*="idm"].active {
+      background: linear-gradient(45deg, #0056b3, #007bff);
+    }
+  </style>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -60,6 +99,9 @@
   <!-- Sweet Alert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   @include('sweetalert::alert')
+  
+  <!-- Additional Scripts -->
+  @yield('scripts')
 
 </body>
 

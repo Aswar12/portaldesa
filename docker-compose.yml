@@ -48,9 +48,14 @@ services:
       - dbdata:/var/lib/mysql
 
   cloudflared:
-    image: cloudflare/cloudflared:latest
+    image: cloudflare/cloudflared:2023.7.0
     container_name: portaldesa-cloudflared
-    command: tunnel --no-autoupdate run --token eyJhIjoiNjE1NzhkZDhiMzMxNzYyMzNlNGM3ZjI5MDYwMmJmMzUiLCJ0IjoiNjJjZTA2YzItNzM5ZC00ZjQ4LThkZWUtOWM1ZDI2YWQ4ZDA5IiwicyI6Ik5qYzVNalZqTmpFdE56VmpNQzAwWW1OaUxUaGtZVEV0WTJZNFl6WmpObU5sWlRobCJ9 --url https://webserver:443 --no-tls-verify
+    command: tunnel --no-autoupdate run --token eyJhIjoiNjE1NzhkZDhiMzMxNzYyMzNlNGM3ZjI5MDYwMmJmMzUiLCJ0IjoiNjJjZTA2YzItNzM5ZC00ZjQ4LThkZWUtOWM1ZDI2YWQ4ZDA5IiwicyI6Ik5qYzVNalZqTmpFdE56VmpNQzAwWW1OaUxUaGtZVEV0WTJZNFl6WmpObU5sWlRobCJ9
+    environment:
+      - TUNNEL_URL=http://webserver:80
+      - TUNNEL_ORIGIN_CERT=false
+      - TUNNEL_METRICS=:20000
+      - TUNNEL_RETRIES=5
     restart: unless-stopped
     depends_on:
       - webserver

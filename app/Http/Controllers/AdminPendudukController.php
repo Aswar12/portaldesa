@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Penduduk;
 use App\Models\Agama;
 use App\Models\Pekerjaan;
+use App\Models\JenisKelamin;
+use App\Imports\PendudukImport;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminPendudukController extends Controller
 {
@@ -28,7 +31,8 @@ class AdminPendudukController extends Controller
     {
         $agamas = Agama::all();
         $pekerjaans = Pekerjaan::all();
-        return view('admin.penduduk.create', compact('agamas', 'pekerjaans'));
+        $jenisKelamins = JenisKelamin::all();
+        return view('admin.penduduk.create', compact('agamas', 'pekerjaans', 'jenisKelamins'));
     }
 
     /**
@@ -58,9 +62,10 @@ class AdminPendudukController extends Controller
     {
         $agamas = Agama::all();
         $pekerjaans = Pekerjaan::all();
+        $jenisKelamins = JenisKelamin::all();
         // Format tanggal_lahir to d-m-Y for display (day month year)
-        $penduduk->tanggal_lahir = Carbon::parse($penduduk->tanggal_lahir)->format('d F Y');
-        return view('admin.penduduk.edit', compact('penduduk', 'agamas', 'pekerjaans'));
+        $penduduk->tanggal_lahir = Carbon::parse($penduduk->ttl)->format('d F Y');
+        return view('admin.penduduk.edit', compact('penduduk', 'agamas', 'pekerjaans', 'jenisKelamins'));
     }
 
     /**
@@ -99,127 +104,170 @@ class AdminPendudukController extends Controller
     public function importFromExcel(Request $request)
     {
         $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,xls',
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv,txt|max:10240', // max 10MB
         ]);
 
-        $file = $request->file('excel_file');
-
         try {
-            $rows = Excel::toArray([], $file->getPathname())[0];
+            $import = new PendudukImport();
+            Excel::import($import, $request->file('excel_file'));
 
-            $header = array_map('strtolower', $rows[0]);
-            $dataRows = array_slice($rows, 1);
+            $importedCount = $import->getImportedCount();
+            $updatedCount = $import->getUpdatedCount();
+            $errors = $import->getErrors();
 
-            $errors = [];
-            DB::beginTransaction();
+            // Debug info
+            Log::info($import->getDebugSummary());
+            
+            $message = "Import berhasil! ";
+            $message .= "Data baru: $importedCount, ";
+            $message .= "Data diperbarui: $updatedCount";
+            
+            if (method_exists($import, 'getTotalRows')) {
+                $totalRows = $import->getTotalRows();
+                $message .= " (Total baris diproses: $totalRows)";
+            }
 
-            foreach ($dataRows as $index => $row) {
-                $rowData = array_combine($header, $row);
-
-                \Log::info('Import Penduduk Row ' . ($index + 2) . ': ' . json_encode($rowData));
-
-                $nik = trim($rowData['nik'] ?? '');
-                if (empty($nik)) {
-                    \Log::warning('Import Penduduk Row ' . ($index + 2) . ': NIK kosong, dilewati.');
-                    continue;
+            // Jika ada error, tapi hanya header yang terdeteksi, jangan tampilkan sebagai warning
+            $headerErrors = 0;
+            foreach ($errors as $error) {
+                if (strpos($error, 'Format NIK tidak valid pada baris 1:') !== false || 
+                    strpos($error, 'NIK kosong pada baris 1') !== false) {
+                    $headerErrors++;
                 }
-
-                $nama = trim($rowData['nama'] ?? '');
-                $ttlRaw = $rowData['tanggal lahir'] ?? null;
-                $ttl = null;
-                if ($ttlRaw) {
-                    try {
-                        // Parsing tanggal lahir dengan format "d - M - Y"
-                        $ttl = \Carbon\Carbon::createFromFormat('d - M - Y', $ttlRaw)->format('Y-m-d');
-                    } catch (\Exception $e1) {
-                        try {
-                            $ttl = \Carbon\Carbon::parse($ttlRaw)->format('Y-m-d');
-                        } catch (\Exception $e2) {
-                            $ttl = null;
-                            \Log::warning('Import Penduduk Row ' . ($index + 2) . ': Gagal parsing tanggal lahir: ' . $ttlRaw);
-                        }
+            }
+            
+            // Jika semua error hanya masalah header, anggap sukses
+            if (!empty($errors) && count($errors) === $headerErrors) {
+                return redirect()->route('admin.penduduk.index')->with('success', $message);
+            } 
+            // Jika ada error lain selain header
+            else if (!empty($errors)) {
+                // Filter out header-related errors
+                $filteredErrors = array_filter($errors, function($error) {
+                    return strpos($error, 'Format NIK tidak valid pada baris 1:') === false && 
+                           strpos($error, 'NIK kosong pada baris 1') === false;
+                });
+                
+                if (count($filteredErrors) > 0) {
+                    $message .= ". Beberapa error: " . implode(', ', array_slice($filteredErrors, 0, 3));
+                    if (count($filteredErrors) > 3) {
+                        $message .= " dan " . (count($filteredErrors) - 3) . " error lainnya.";
                     }
+                    
+                    // Debug error detail
+                    Log::debug('Import errors: ' . json_encode(array_slice($filteredErrors, 0, 20)));
+                    
+                    return redirect()->route('admin.penduduk.index')->with('warning', $message);
                 }
-
-                $jenisKelaminStr = strtolower(trim($rowData['jenis kelamin'] ?? ''));
-                $agamaStr = strtolower(trim($rowData['agama'] ?? ''));
-                $pekerjaanStr = strtolower(trim($rowData['pekerjaan'] ?? ''));
-
-                $jenisKelaminId = $this->getJenisKelaminId($jenisKelaminStr);
-                $agamaId = $this->getAgamaId($agamaStr);
-                $pekerjaanId = $this->getPekerjaanId($pekerjaanStr);
-
-                if (!$jenisKelaminId) {
-                    $errors[] = "Baris " . ($index + 2) . ": Jenis Kelamin '$jenisKelaminStr' tidak ditemukan.";
-                    \Log::warning('Import Penduduk Row ' . ($index + 2) . ': Jenis Kelamin tidak ditemukan: ' . $jenisKelaminStr);
-                }
-                if (!$agamaId) {
-                    $errors[] = "Baris " . ($index + 2) . ": Agama '$agamaStr' tidak ditemukan.";
-                    \Log::warning('Import Penduduk Row ' . ($index + 2) . ': Agama tidak ditemukan: ' . $agamaStr);
-                }
-                if (!$pekerjaanId) {
-                    $errors[] = "Baris " . ($index + 2) . ": Pekerjaan '$pekerjaanStr' tidak ditemukan.";
-                    \Log::warning('Import Penduduk Row ' . ($index + 2) . ': Pekerjaan tidak ditemukan: ' . $pekerjaanStr);
-                }
-
-                $alamat = trim($rowData['alamat'] ?? '');
-                $statusPerkawinan = trim($rowData['status dlm keluarga'] ?? null);
-                $kk = trim($rowData['no. kk'] ?? null);
-                $tempatLahir = trim($rowData['tempat lahir'] ?? null);
-
-                $penduduk = Penduduk::where('nik', $nik)->first();
-
-                $data = [
-                    'nama' => $nama,
-                    'ttl' => $ttl,
-                    'jenis_kelamin_id' => $jenisKelaminId,
-                    'agama_id' => $agamaId,
-                    'pekerjaan_id' => $pekerjaanId,
-                    'alamat' => $alamat,
-                    'status_perkawinan' => $statusPerkawinan,
-                    'kk' => $kk,
-                    'tempat_lahir' => $tempatLahir,
-                ];
-
-                if ($penduduk) {
-                    $penduduk->update($data);
-                } else {
-                    $data['nik'] = $nik;
-                    Penduduk::create($data);
-                }
+                
+                return redirect()->route('admin.penduduk.index')->with('success', $message);
             }
 
-            if (count($errors) > 0) {
-                DB::rollBack();
-                $errorMessage = implode(' ', $errors);
-                return redirect()->route('admin.penduduk.index')->with('error', 'Gagal mengimpor data: ' . $errorMessage);
-            }
+            return redirect()->route('admin.penduduk.index')->with('success', $message);
 
-            DB::commit();
-            return redirect()->route('admin.penduduk.index')->with('success', 'Data penduduk berhasil diimpor dari Excel.');
         } catch (\Exception $e) {
-            DB::rollBack();
-            \Log::error('Import Penduduk Error: ' . $e->getMessage());
-            return redirect()->route('admin.penduduk.index')->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
+            Log::error('Import Excel Error: ' . $e->getMessage());
+            return redirect()->route('admin.penduduk.index')
+                ->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
         }
     }
 
-    protected function getJenisKelaminId($name)
+    /**
+     * Download template Excel untuk import data penduduk.
+     */
+    public function downloadTemplate()
     {
-        $jenisKelamin = \App\Models\JenisKelamin::whereRaw('LOWER(jenis_kelamin) = ?', [$name])->first();
-        return $jenisKelamin ? $jenisKelamin->id : null;
-    }
+        $templateData = [
+            [
+                'NO' => 1,
+                'NO. KK' => '9109012701120047',
+                'NIK' => '9109011907860010',
+                'NAMA' => 'CONTOH NAMA',
+                'JENIS KELAMIN' => 'LAKI-LAKI',
+                'TEMPAT LAHIR' => 'JAKARTA',
+                'TANGGAL LAHIR' => '19 - Jul - 1986',
+                'AGAMA' => 'ISLAM',
+                'PEKERJAAN' => 'WIRASWASTA',
+                'STATUS DLM KELUARGA' => 'KEPALA KELUARGA',
+                'UMUR' => '39 TAHUN',
+                'ALAMAT' => 'RT 01'
+            ]
+        ];
 
-    protected function getAgamaId($name)
-    {
-        $agama = \App\Models\Agama::whereRaw('LOWER(name) = ?', [$name])->first();
-        return $agama ? $agama->id : null;
+        return Excel::download(new class($templateData) implements \Maatwebsite\Excel\Concerns\FromArray {
+            private $data;
+            
+            public function __construct($data) {
+                $this->data = $data;
+            }
+            
+            public function array(): array {
+                return $this->data;
+            }
+        }, 'template_import_penduduk.xlsx');
     }
-
-    protected function getPekerjaanId($name)
+    
+    /**
+     * Export data penduduk ke Excel
+     */
+    public function exportToExcel()
     {
-        $pekerjaan = \App\Models\Pekerjaan::whereRaw('LOWER(name) = ?', [$name])->first();
-        return $pekerjaan ? $pekerjaan->id : null;
+        $penduduks = Penduduk::with(['agama', 'jenisKelamin', 'pekerjaan'])->get();
+        
+        // Prepare data for export
+        $exportData = [
+            // Header row
+            [
+                'NO', 'NIK', 'NAMA', 'NO KK', 'TEMPAT LAHIR', 'TANGGAL LAHIR', 
+                'JENIS KELAMIN', 'AGAMA', 'PEKERJAAN', 'STATUS DLM KELUARGA', 'ALAMAT'
+            ]
+        ];
+        
+        // Add data rows
+        $no = 1;
+        foreach ($penduduks as $penduduk) {
+            $exportData[] = [
+                $no++,
+                $penduduk->nik,
+                $penduduk->nama,
+                $penduduk->kk ?? '-',
+                $penduduk->tempat_lahir ?? '-',
+                $penduduk->ttl ? Carbon::parse($penduduk->ttl)->format('d-m-Y') : '-',
+                $penduduk->jenis_kelamin ?? ($penduduk->jenisKelamin ? $penduduk->jenisKelamin->jenis_kelamin : '-'),
+                $penduduk->agama ?? ($penduduk->agama_relation ? $penduduk->agama_relation->agama : '-'),
+                $penduduk->pekerjaan ?? ($penduduk->pekerjaan_relation ? $penduduk->pekerjaan_relation->pekerjaan : '-'),
+                $penduduk->status_dlm_keluarga ?? '-',
+                $penduduk->alamat ?? '-'
+            ];
+        }
+        
+        $timestamp = Carbon::now()->format('Ymd_His');
+        $filename = "data_penduduk_{$timestamp}.xlsx";
+        
+        return Excel::download(new class($exportData) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithHeadings, \Maatwebsite\Excel\Concerns\WithStyles {
+            private $data;
+            
+            public function __construct($data) {
+                $this->data = $data;
+            }
+            
+            public function array(): array {
+                // Return all but first row (which is header)
+                return array_slice($this->data, 1);
+            }
+            
+            public function headings(): array {
+                // Return first row as headings
+                return $this->data[0];
+            }
+            
+            public function styles($sheet) {
+                return [
+                    1 => ['font' => ['bold' => true, 'size' => 12]],
+                    'A1:K1' => ['fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => 'EEEEEE']]],
+                ];
+            }
+        }, $filename);
     }
 
 }
