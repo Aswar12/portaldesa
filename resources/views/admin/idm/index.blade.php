@@ -458,7 +458,7 @@ $(document).ready(function() {
             "pageLength": 10,
             "responsive": true,
             "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+                "url": "/assets/i18n/Indonesian.json"
             },
             "columnDefs": [
                 { "orderable": false, "targets": [0, 8] }, // Disable sorting for No and Action columns

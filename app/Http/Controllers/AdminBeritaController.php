@@ -50,7 +50,8 @@ class AdminBeritaController extends Controller
             'slug'          => 'required|unique:beritas',
             'body'          => 'required',
             'kategori_id'   => 'required',
-            'status_id'     => 'required'
+            'status_id'     => 'required',
+            'published_at'  => 'required|date'
         ],[
             'gambar.required'       => 'Wajib menambahkan gambar !',
             'gambar.mimes'          => 'Format gambar yang di izinkan Jpeg, Jpg, Png',
@@ -59,7 +60,9 @@ class AdminBeritaController extends Controller
             'slug.unique'           => 'Slug sudah digunakan',
             'body.required'         => 'Wajib menambahkan isi berita !',
             'kategori_id.required'  => 'Wajib memilih kategori !',
-            'status_id.required'    => 'Wajib memilih status berita !'
+            'status_id.required'    => 'Wajib memilih status berita !',
+            'published_at.required' => 'Waktu posting wajib diisi!',
+            'published_at.date'     => 'Format waktu tidak valid!'
         ]);
 
         if($request->hasFile('gambar')){
@@ -78,9 +81,7 @@ class AdminBeritaController extends Controller
                 ->withInput();
         }
 
-        $createdAt = $request->published_at 
-            ? \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura')
-            : now()->tz('Asia/Jayapura');
+        $createdAt = \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura');
         
         $berita = Berita::create([
             'judul'         =>  $request->judul,

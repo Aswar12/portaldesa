@@ -97,10 +97,19 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="published_at" class="form-label">Tanggal Post (WIT) <small class="text-muted">(Opsional)</small></label>
+                            <label for="published_at" class="form-label">
+                                <i class="fas fa-calendar-alt me-1"></i>Tanggal Post (WIT) 
+                                <span style="color: red">*</span>
+                            </label>
                             <input type="datetime-local" class="form-control" name="published_at" id="published_at" 
-                                   value="{{ old('published_at', $berita->created_at ? $berita->created_at->timezone('Asia/Jayapura')->format('Y-m-d\TH:i') : now()->timezone('Asia/Jayapura')->format('Y-m-d\TH:i')) }}">
-                            <small class="text-muted">Kosongkan untuk menggunakan waktu saat ini (Waktu Indonesia Timur)</small>
+                                   value="{{ old('published_at', $berita->created_at ? \Carbon\Carbon::parse($berita->created_at)->setTimezone('Asia/Jayapura')->format('Y-m-d\TH:i') : now()->setTimezone('Asia/Jayapura')->format('Y-m-d\TH:i')) }}" required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <strong>Info:</strong> Tahun dari tanggal ini akan otomatis digunakan untuk filter di halaman berita publik.
+                                <br>
+                                <i class="fas fa-filter me-1"></i>
+                                Pengunjung dapat memfilter berita berdasarkan tahun publish ini.
+                            </div>
                             @error('published_at')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror

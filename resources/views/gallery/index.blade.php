@@ -309,7 +309,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="gallery-badge">{{ $gallery->year ?? 'Tidak ada tahun' }}</span>
                                     <small class="text-muted">
-                                        {{ $gallery->published_at ? $gallery->published_at->timezone('Asia/Jayapura')->format('d/m/Y') : '-' }}
+                                        {{ $gallery->published_at ? \Carbon\Carbon::parse($gallery->published_at)->setTimezone('Asia/Jayapura')->format('d/m/Y') : '-' }}
                                     </small>
                                 </div>
                             </div>

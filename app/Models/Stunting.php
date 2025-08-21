@@ -20,7 +20,8 @@ class Stunting extends Model
         'gambar',
         'tampil_infografis',
         'warna_chart',
-        'user_id'
+        'user_id',
+        'published_at'
     ];
 
     protected $casts = [
@@ -29,7 +30,8 @@ class Stunting extends Model
         'balita_stunting' => 'integer',
         'balita_kurus' => 'integer',
         'balita_gemuk' => 'integer',
-        'tahun' => 'integer'
+        'tahun' => 'integer',
+        'published_at' => 'datetime'
     ];
 
     /**

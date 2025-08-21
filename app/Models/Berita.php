@@ -17,7 +17,29 @@ class Berita extends Model
     
     protected $guarded = ['id'];
     
-    protected $dates = ['created_at', 'updated_at', 'published_at'];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($berita) {
+            // Auto-generate year from created_at if year is not provided
+            if (!$berita->year && $berita->created_at) {
+                $berita->year = $berita->created_at->year;
+            }
+        });
+        
+        static::updating(function ($berita) {
+            // Auto-generate year from created_at if year is not provided during update
+            if (!$berita->year && $berita->created_at) {
+                $berita->year = $berita->created_at->year;
+            }
+        });
+    }
 
     public function sluggable(): array
     {

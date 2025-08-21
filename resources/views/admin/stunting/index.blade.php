@@ -13,7 +13,9 @@
                             <small class="text-light opacity-75">Manajemen data stunting balita</small>
                         </div>
                         <div class="col-6 text-end">
-                            <a href="{{ route('admin.stunting.create') }}" class="btn btn-light btn-stunting-add">
+                            <a href="{{ route('admin.stunting.create') }}" 
+                               class="btn btn-light btn-stunting-add"
+                               title="Klik untuk menambah data stunting baru">
                                 <i class="fas fa-plus me-2"></i>Tambah Data Stunting
                             </a>
                         </div>
@@ -232,12 +234,18 @@
         font-weight: 600;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        position: relative;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
     }
 
     .btn-stunting-add:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
         background: rgba(255, 255, 255, 0.95);
+        text-decoration: none;
+        color: #333;
     }
 
     /* Modern Alert */
@@ -677,7 +685,7 @@
                     "pageLength": 25,
                     "responsive": true,
                     "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+                        "url": "/assets/i18n/Indonesian.json"
                     },
                     "columnDefs": [
                         { "orderable": false, "targets": [1, 9] }, // Disable sorting for image and action columns

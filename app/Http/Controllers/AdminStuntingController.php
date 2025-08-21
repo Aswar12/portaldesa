@@ -54,7 +54,7 @@ class AdminStuntingController extends Controller
             'balita_stunting'    => 'required|integer|min:0',
             'balita_kurus'       => 'required|integer|min:0',
             'balita_gemuk'       => 'required|integer|min:0',
-            'tahun'              => 'required|integer|min:2020|max:2030',
+            'published_at'       => 'required|date',
             'keterangan'         => 'nullable|string',
             'gambar'             => 'nullable|mimes:jpg,png,jpeg|max:2048',
             'tampil_infografis'  => 'boolean',
@@ -65,7 +65,8 @@ class AdminStuntingController extends Controller
             'balita_stunting.required' => 'Jumlah balita stunting wajib diisi!',
             'balita_kurus.required'    => 'Jumlah balita kurus wajib diisi!',
             'balita_gemuk.required'    => 'Jumlah balita gemuk wajib diisi!',
-            'tahun.required'           => 'Tahun wajib diisi!',
+            'published_at.required'    => 'Waktu unggah wajib diisi!',
+            'published_at.date'        => 'Format waktu tidak valid!',
             'gambar.mimes'             => 'Format gambar yang diizinkan: png, jpg, jpeg!',
             'gambar.max'               => 'Ukuran gambar maksimal 2MB!'
         ]);
@@ -79,6 +80,11 @@ class AdminStuntingController extends Controller
         $data = $request->all();
         $data['user_id'] = auth()->user()->id;
         $data['tampil_infografis'] = $request->has('tampil_infografis');
+        
+        // Parse published_at and extract year
+        $published_at = \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura');
+        $data['published_at'] = $published_at;
+        $data['tahun'] = $published_at->year;
 
         // Handle gambar upload
         if ($request->hasFile('gambar')) {
@@ -117,7 +123,7 @@ class AdminStuntingController extends Controller
             'balita_stunting'    => 'required|integer|min:0',
             'balita_kurus'       => 'required|integer|min:0',
             'balita_gemuk'       => 'required|integer|min:0',
-            'tahun'              => 'required|integer|min:2020|max:2030',
+            'published_at'       => 'required|date',
             'keterangan'         => 'nullable|string',
             'gambar'             => 'nullable|mimes:jpg,png,jpeg|max:2048',
             'tampil_infografis'  => 'boolean',
@@ -132,6 +138,11 @@ class AdminStuntingController extends Controller
 
         $data = $request->all();
         $data['tampil_infografis'] = $request->has('tampil_infografis');
+        
+        // Parse published_at and extract year
+        $published_at = \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura');
+        $data['published_at'] = $published_at;
+        $data['tahun'] = $published_at->year;
 
         // Handle gambar upload
         if ($request->hasFile('gambar')) {

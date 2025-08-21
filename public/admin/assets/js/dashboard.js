@@ -4,7 +4,8 @@ $(function () {
   // =====================================
   // Profit
   // =====================================
-  var chart = {
+  // Profit chart options
+  var profitOptions = {
     series: [
       { name: "Earnings this month:", data: [355, 390, 300, 350, 390, 180, 355, 390] },
       { name: "Expense this month:", data: [280, 250, 325, 215, 250, 310, 280, 250] },
@@ -101,8 +102,11 @@ $(function () {
 
   };
 
-  var chart = new ApexCharts(document.querySelector("#chart"), chart);
-  chart.render();
+  var chartEl = document.querySelector("#chart");
+  if (chartEl && typeof ApexCharts !== 'undefined') {
+    var profitChart = new ApexCharts(chartEl, profitOptions);
+    profitChart.render();
+  }
 
 
   // =====================================
@@ -156,8 +160,11 @@ $(function () {
     },
   };
 
-  var chart = new ApexCharts(document.querySelector("#breakup"), breakup);
-  chart.render();
+  var breakupEl = document.querySelector("#breakup");
+  if (breakupEl && typeof ApexCharts !== 'undefined') {
+    var breakupChart = new ApexCharts(breakupEl, breakup);
+    breakupChart.render();
+  }
 
 
 
@@ -207,5 +214,8 @@ $(function () {
       },
     },
   };
-  new ApexCharts(document.querySelector("#earning"), earning).render();
+  var earningEl = document.querySelector("#earning");
+  if (earningEl && typeof ApexCharts !== 'undefined') {
+    new ApexCharts(earningEl, earning).render();
+  }
 })

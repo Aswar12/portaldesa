@@ -242,6 +242,7 @@ Route::resource('/admin/pengumuman', AdminAnnouncementController::class);
 
 // APBDes Management
 Route::get('/admin/apbdes/slug', [AdminAnggaranController::class, 'slug']);
+Route::delete('/admin/apbdes/bulk-delete', [AdminAnggaranController::class, 'bulkDelete'])->name('admin.apbdes.bulk-delete');
 Route::resource('/admin/apbdes', AdminAnggaranController::class)->names('admin.apbdes');
 
 // Penduduk Management

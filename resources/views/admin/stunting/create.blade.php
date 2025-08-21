@@ -35,17 +35,21 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
-                                        <label for="tahun" class="form-label">Tahun <span style="color: red">*</span></label>
-                                        <input type="number" class="form-control @error('tahun') is-invalid @enderror" 
-                                               name="tahun" id="tahun" 
-                                               value="{{ old('tahun', date('Y')) }}" min="2020" max="2030">
-                                        @error('tahun')
+                                        <label for="published_at" class="form-label">Waktu Unggah (WIT) <span style="color: red">*</span></label>
+                                        <input type="datetime-local" class="form-control @error('published_at') is-invalid @enderror" 
+                                               name="published_at" id="published_at" 
+                                               value="{{ old('published_at', now()->setTimezone('Asia/Jayapura')->format('Y-m-d\TH:i')) }}" required>
+                                        <small class="text-muted">Tahun akan otomatis diambil dari waktu unggah ini</small>
+                                        @error('published_at')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="warna_chart" class="form-label">Warna Chart</label>

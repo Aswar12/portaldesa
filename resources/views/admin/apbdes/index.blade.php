@@ -10,6 +10,9 @@
                             <h5 class="card-title fw-semibold text-white">Data APBDES</h5>
                         </div>
                         <div class="col-6 text-right">
+                            <button type="button" id="deleteSelectedBtn" class="btn btn-danger me-2" style="display: none;">
+                                <i class="fas fa-trash me-2"></i>Hapus Terpilih (<span id="selectedCount">0</span>)
+                            </button>
                             <a href="/admin/apbdes/create" type="button" class="btn btn-warning float-end">
                                 <i class="fas fa-plus me-2"></i>Tambah Data APBDES
                             </a>
@@ -75,6 +78,12 @@
                             <table id="table_id" class="table table-striped table-hover">
                                 <thead class="table-dark">
                                     <tr>
+                                        <th width="3%">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="selectAll">
+                                                <label class="form-check-label text-white" for="selectAll"></label>
+                                            </div>
+                                        </th>
                                         <th width="5%">No</th>
                                         <th width="10%">Gambar</th>
                                         <th width="20%">Judul</th>
@@ -89,6 +98,13 @@
                                 <tbody>
                                     @forelse ($anggarans as $anggaran)
                                         <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input row-checkbox" type="checkbox" 
+                                                           value="{{ $anggaran->id }}" id="check{{ $anggaran->id }}">
+                                                    <label class="form-check-label" for="check{{ $anggaran->id }}"></label>
+                                                </div>
+                                            </td>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>
                                                 @if($anggaran->gambar)
@@ -159,7 +175,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="9" class="text-center py-4">
+                                            <td colspan="10" class="text-center py-4">
                                                 <div class="text-muted">
                                                     <i class="fas fa-folder-open fa-3x mb-3"></i>
                                                     <p>Belum ada data APBDES</p>
@@ -179,21 +195,139 @@
         </div>
     </div>
 
+    <!-- Form tersembunyi untuk bulk delete -->
+    <form id="bulkDeleteForm" action="{{ route('admin.apbdes.bulk-delete') }}" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="selected_ids" id="selectedIds">
+    </form>
+
     <script>
         $(document).ready(function() {
             $('#table_id').DataTable({
                 "pageLength": 25,
                 "responsive": true,
                 "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+                    "url": "/assets/i18n/Indonesian.json"
                 },
                 "columnDefs": [
-                    { "orderable": false, "targets": [1, 8] } // Disable sorting for image and action columns
+                    { "orderable": false, "targets": [0, 2, 9] } // Disable sorting for checkbox, image and action columns
                 ]
+            });
+
+            // Select All functionality
+            $('#selectAll').change(function() {
+                $('.row-checkbox').prop('checked', this.checked);
+                updateSelectedCount();
+            });
+
+            // Individual checkbox change
+            $('.row-checkbox').change(function() {
+                updateSelectedCount();
+                
+                // Update select all checkbox
+                var totalCheckboxes = $('.row-checkbox').length;
+                var checkedCheckboxes = $('.row-checkbox:checked').length;
+                
+                $('#selectAll').prop('indeterminate', checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+                $('#selectAll').prop('checked', checkedCheckboxes === totalCheckboxes);
+            });
+
+            // Update selected count and show/hide delete button
+            function updateSelectedCount() {
+                var selectedCount = $('.row-checkbox:checked').length;
+                $('#selectedCount').text(selectedCount);
+                
+                if (selectedCount > 0) {
+                    $('#deleteSelectedBtn').show();
+                } else {
+                    $('#deleteSelectedBtn').hide();
+                }
+            }
+
+            // Bulk delete with double confirmation
+            $('#deleteSelectedBtn').click(function() {
+                var selectedIds = [];
+                $('.row-checkbox:checked').each(function() {
+                    selectedIds.push($(this).val());
+                });
+
+                if (selectedIds.length === 0) {
+                    Swal.fire({
+                        title: 'Peringatan!',
+                        text: 'Pilih data yang ingin dihapus terlebih dahulu.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                // First confirmation
+                Swal.fire({
+                    title: 'Konfirmasi Hapus Data',
+                    html: `Anda akan menghapus <strong>${selectedIds.length} data APBDES</strong>.<br>
+                           <span style="color: #d33;">Data yang dihapus tidak dapat dikembalikan!</span>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Lanjutkan',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                        cancelButton: 'btn btn-secondary'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Second confirmation (more strict)
+                        Swal.fire({
+                            title: 'KONFIRMASI AKHIR!',
+                            html: `<div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                                     <i class="fas fa-exclamation-triangle" style="color: #856404; margin-right: 5px;"></i>
+                                     <strong>PERINGATAN KERAS:</strong>
+                                   </div>
+                                   Anda yakin ingin menghapus <strong style="color: #d33;">${selectedIds.length} data APBDES</strong>?<br><br>
+                                   <strong>Tindakan ini tidak dapat dibatalkan!</strong><br>
+                                   <small>Ketik "HAPUS" di bawah untuk melanjutkan:</small>`,
+                            input: 'text',
+                            inputPlaceholder: 'Ketik "HAPUS" untuk konfirmasi',
+                            showCancelButton: true,
+                            confirmButtonColor: '#dc3545',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Ya, Hapus Sekarang!',
+                            cancelButtonText: 'Batalkan',
+                            inputValidator: (value) => {
+                                if (value !== 'HAPUS') {
+                                    return 'Anda harus mengetik "HAPUS" untuk melanjutkan!'
+                                }
+                            },
+                            customClass: {
+                                confirmButton: 'btn btn-danger',
+                                cancelButton: 'btn btn-secondary'
+                            }
+                        }).then((finalResult) => {
+                            if (finalResult.isConfirmed) {
+                                // Show processing message
+                                Swal.fire({
+                                    title: 'Menghapus Data...',
+                                    text: 'Mohon tunggu, sedang memproses penghapusan.',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+
+                                // Submit the form
+                                $('#selectedIds').val(selectedIds.join(','));
+                                $('#bulkDeleteForm').submit();
+                            }
+                        });
+                    }
+                });
             });
         });
 
-        // SweetAlert for delete confirmation
+        // SweetAlert for individual delete confirmation
         $('.swal-confirm').click(function(e) {
             e.preventDefault();
             var form = $(this).data('form');
@@ -213,4 +347,61 @@
             });
         });
     </script>
+
+<style>
+/* Custom checkbox styling */
+.form-check-input:checked {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+#deleteSelectedBtn {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Indeterminate checkbox style */
+.form-check-input:indeterminate {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+/* Table row hover effect when checkbox checked */
+.row-checkbox:checked + label {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+tr:has(.row-checkbox:checked) {
+    background-color: rgba(220, 53, 69, 0.05) !important;
+}
+
+/* Better button styling */
+#deleteSelectedBtn {
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+#deleteSelectedBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
+}
+</style>
 @endsection

@@ -46,13 +46,12 @@ class AdminGalleryController extends Controller
         $validator = Validator::make($request->all(), [
             'gambar'       => 'required|mimes:png,jpg,jpeg',
             'keterangan'   => 'required',
-            'year'         => 'nullable|integer',
-            'published_at' => 'nullable|date'
+            'published_at' => 'required|date'
         ], [
             'gambar.required'       => 'Form wajib di isi !',
             'gambar.mimes'          => 'Format yang di izinkan png,jpg,jpeg !',
-            'keterangan.required'   => 'Form wajib di,',
-            'year.integer'          => 'Tahun harus berupa angka',
+            'keterangan.required'   => 'Form wajib di isi!',
+            'published_at.required' => 'Waktu unggah wajib diisi!',
             'published_at.date'     => 'Format tanggal tidak valid'
         ]);
 
@@ -70,14 +69,15 @@ class AdminGalleryController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $published_at = $request->published_at 
-            ? \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura')
-            : now()->tz('Asia/Jayapura');
+        $published_at = \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura');
+
+        // Auto-generate year from published_at
+        $year = $published_at->year;
 
         Gallery::create([
             'gambar'       => $gambar,
             'keterangan'   => $request->keterangan,
-            'year'         => $request->year,
+            'year'         => $year,
             'user_id'      => auth()->user()->id,
             'published_at' => $published_at
         ]);
@@ -105,11 +105,12 @@ class AdminGalleryController extends Controller
         $validator = Validator::make($request->all(), [
             'gambar'       => 'mimes:png,jpg,jpeg',
             'keterangan'   => 'required',
-            'year'         => 'nullable|integer'
+            'published_at' => 'required|date'
         ], [
             'gambar.mimes'          => 'Format yang di izinkan png,jpg,jpeg !',
-            'keterangan.required'   => 'Form wajib di,',
-            'year.integer'          => 'Tahun harus berupa angka'
+            'keterangan.required'   => 'Form wajib di isi!',
+            'published_at.required' => 'Waktu unggah wajib diisi!',
+            'published_at.date'     => 'Format tanggal tidak valid'
         ]);
 
         if ($validator->fails()) {
@@ -128,10 +129,15 @@ class AdminGalleryController extends Controller
             $gambar     = $file->storeAs($path, $fileName, 'public');
         }
 
+        // Auto-generate year from published_at
+        $published_at = \Carbon\Carbon::parse($request->published_at)->tz('Asia/Jayapura');
+        $year = $published_at->year;
+
         $gallery->update([
             'gambar'        => $gambar,
             'keterangan'    => $request->keterangan,
-            'year'          => $request->year
+            'year'          => $year,
+            'published_at'  => $published_at
         ]);
 
         return redirect('/admin/gallery')->with('success', 'Berhasil memperbarui data gallery');

@@ -17,17 +17,34 @@
                 </div>
 
                 <div class="card-body">
+                    <!-- Info Alert -->
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Info Fitur Filter:</strong> 
+                        Tahun dari setiap foto akan otomatis digunakan untuk filter di halaman galeri publik. 
+                        Pengunjung dapat memfilter foto berdasarkan tahun unggah.
+                        <a href="{{ url('/gallery') }}" target="_blank" class="btn btn-sm btn-outline-primary ms-2">
+                            <i class="fas fa-external-link-alt me-1"></i>Lihat Galeri Publik
+                        </a>
+                    </div>
+                    
                     <form method="GET" action="{{ url('/admin/gallery') }}" class="mb-3">
                         <div class="row g-2 align-items-center">
                             <div class="col-auto">
-                                <label for="year" class="col-form-label">Filter Tahun:</label>
+                                <label for="year" class="col-form-label">
+                                    <i class="fas fa-calendar-alt me-1"></i>Filter Tahun:
+                                </label>
                             </div>
                             <div class="col-auto">
                                 <input type="number" name="year" id="year" class="form-control" placeholder="Masukkan Tahun" value="{{ old('year', $filterYear) }}">
                             </div>
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">Filter</button>
-                                <a href="{{ url('/admin/gallery') }}" class="btn btn-secondary">Reset</a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter me-1"></i>Filter
+                                </button>
+                                <a href="{{ url('/admin/gallery') }}" class="btn btn-secondary">
+                                    <i class="fas fa-times me-1"></i>Reset
+                                </a>
                             </div>
                         </div>
                     </form>

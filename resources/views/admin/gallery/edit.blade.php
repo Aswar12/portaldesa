@@ -43,18 +43,19 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="year" class="form-label">Tahun</label>
-                            <input type="number" class="form-control" name="year" id="year" value="{{ old('year', $gallery->year) }}" placeholder="Masukkan Tahun">
-                            @error('year')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="published_at" class="form-label">Waktu Unggah (WIT) <small class="text-muted">(Opsional)</small></label>
+                            <label for="published_at" class="form-label">
+                                <i class="fas fa-calendar-alt me-1"></i>Waktu Unggah (WIT) 
+                                <span style="color: red">*</span>
+                            </label>
                             <input type="datetime-local" class="form-control" name="published_at" id="published_at" 
-                                   value="{{ old('published_at', $gallery->published_at ? $gallery->published_at->timezone('Asia/Jayapura')->format('Y-m-d\TH:i') : now()->timezone('Asia/Jayapura')->format('Y-m-d\TH:i')) }}">
-                            <small class="text-muted">Kosongkan untuk menggunakan waktu saat ini (Waktu Indonesia Timur)</small>
+                                   value="{{ old('published_at', $gallery->published_at ? \Carbon\Carbon::parse($gallery->published_at)->setTimezone('Asia/Jayapura')->format('Y-m-d\TH:i') : now()->setTimezone('Asia/Jayapura')->format('Y-m-d\TH:i')) }}" required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <strong>Info:</strong> Tahun dari tanggal ini akan otomatis digunakan untuk filter di halaman galeri publik.
+                                <br>
+                                <i class="fas fa-filter me-1"></i>
+                                Pengunjung dapat memfilter foto berdasarkan tahun unggah ini.
+                            </div>
                             @error('published_at')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror

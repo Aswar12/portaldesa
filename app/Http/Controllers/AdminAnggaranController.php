@@ -214,6 +214,35 @@ class AdminAnggaranController extends Controller
     }
 
     /**
+     * Bulk delete selected anggarans
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'selected_ids' => 'required|string'
+        ]);
+
+        $selectedIds = explode(',', $request->selected_ids);
+        $deletedCount = 0;
+
+        foreach ($selectedIds as $id) {
+            $anggaran = Anggaran::find($id);
+            if ($anggaran) {
+                // Hapus gambar jika ada
+                if ($anggaran->gambar && Storage::disk('public')->exists($anggaran->gambar)) {
+                    Storage::disk('public')->delete($anggaran->gambar);
+                }
+                
+                $anggaran->delete();
+                $deletedCount++;
+            }
+        }
+
+        return redirect()->route('admin.apbdes.index')
+                       ->with('success', "Berhasil menghapus {$deletedCount} data APBDES!");
+    }
+
+    /**
      * Generate slug for anggaran
      */
     public function slug(Request $request)

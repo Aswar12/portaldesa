@@ -12,7 +12,9 @@
                     </h5>
                 </div>
                 <div class="col-6 text-end">
-                    <a href="/admin/berita/create" type="button" class="btn btn-light btn-elevated">
+                    <a href="{{ route('berita.create') }}" 
+                       class="btn btn-light btn-elevated tambah-berita-btn"
+                       title="Klik untuk menambah berita baru">
                         <i class="fas fa-plus me-1"></i>Tambah Berita
                     </a>
                 </div>
@@ -104,11 +106,11 @@
                                                        class="action-btn view-btn" title="Lihat Berita">
                                                         <i class="fas fa-external-link-alt"></i>
                                                     </a>
-                                                    <a href="/admin/berita/{{ $berita->id }}/edit" 
+                                                    <a href="{{ route('berita.edit', $berita->id) }}" 
                                                        class="action-btn edit-btn" title="Edit Berita">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <form id="{{ $berita->id }}" action="/admin/berita/{{ $berita->id }}" method="POST" class="d-inline">
+                                                    <form id="{{ $berita->id }}" action="{{ route('berita.destroy', $berita->id) }}" method="POST" class="d-inline">
                                                         @method('delete')
                                                         @csrf
                                                         <button type="button" class="action-btn delete-btn swal-confirm" 
@@ -181,11 +183,11 @@
                                             </td>
                                             <td class="text-center action-cell">
                                                 <div class="action-buttons-group">
-                                                    <a href="/admin/berita/{{ $berita->id }}/edit" 
+                                                    <a href="{{ route('berita.edit', $berita->id) }}" 
                                                        class="action-btn edit-btn" title="Edit Berita">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <form id="{{ $berita->id }}" action="/admin/berita/{{ $berita->id }}" method="POST" class="d-inline">
+                                                    <form id="{{ $berita->id }}" action="{{ route('berita.destroy', $berita->id) }}" method="POST" class="d-inline">
                                                         @method('delete')
                                                         @csrf
                                                         <button type="button" class="action-btn delete-btn swal-confirm" 
@@ -248,12 +250,15 @@
         font-weight: 600;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        position: relative;
+        z-index: 100;
     }
 
     .btn-elevated:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
         background: rgba(255, 255, 255, 0.95);
+        text-decoration: none;
     }
 
     /* Modern Alert */
@@ -401,12 +406,12 @@
 
     /* Column Width Optimization */
     .modern-table th:nth-child(1) { width: 6%; }   /* No */
-    .modern-table th:nth-child(2) { width: 25%; }  /* Judul */
-    .modern-table th:nth-child(3) { width: 25%; }  /* Ringkasan */
+    .modern-table th:nth-child(2) { width: 23%; }  /* Judul */
+    .modern-table th:nth-child(3) { width: 23%; }  /* Ringkasan */
     .modern-table th:nth-child(4) { width: 12%; }  /* Penulis */
     .modern-table th:nth-child(5) { width: 12%; }  /* Tanggal */
-    .modern-table th:nth-child(6) { width: 10%; }  /* Status */
-    .modern-table th:nth-child(7) { width: 10%; }  /* Aksi */
+    .modern-table th:nth-child(6) { width: 12%; }  /* Status */
+    .modern-table th:nth-child(7) { width: 12%; }  /* Aksi */
 
     /* Cell Styling */
     .number-cell {
@@ -461,6 +466,22 @@
         margin-top: 2px;
     }
 
+    /* Enhanced date column styling */
+    #table_id td:nth-child(5), #table_draft td:nth-child(5) { 
+        white-space: nowrap; 
+        font-family: monospace; 
+        font-size: 0.9em; 
+        color: #666; 
+    }
+
+    /* Style for timezone indicator */
+    .timezone { 
+        font-size: 0.8em; 
+        color: #888; 
+        font-weight: 500; 
+        margin-left: 2px; 
+    }
+
     /* Status Badges */
     .status-badge {
         padding: 8px 16px;
@@ -471,6 +492,9 @@
         letter-spacing: 0.5px;
         border: 2px solid transparent;
         transition: all 0.3s ease;
+        display: inline-block;
+        min-width: 90px;
+        text-align: center;
     }
 
     .status-published {
@@ -488,6 +512,12 @@
     .status-badge:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Status Cell Styling */
+    .status-cell {
+        white-space: nowrap;
+        min-width: 120px;
     }
 
     /* Action Buttons */
@@ -606,35 +636,19 @@
         }
     }
 </style>
-    #table_id td:nth-child(5),
-    #table_draft td:nth-child(5) {
-        white-space: nowrap;
-        font-family: monospace;
-        font-size: 0.9em;
-        color: #666;
-    }
-    
-    /* Style for timezone indicator */
-    .timezone {
-        font-size: 0.8em;
-        color: #888;
-        font-weight: 500;
-        margin-left: 2px;
-    }
-</style>
 
 <script>
     $(document).ready( function () {
         $('#table_id').DataTable({
             "order": [[4, "desc"]], // Sort by date column by default
             "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+                "url": "/assets/i18n/Indonesian.json"
             }
         });
         $('#table_draft').DataTable({
             "order": [[4, "desc"]], // Sort by date column by default
             "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+                "url": "/assets/i18n/Indonesian.json"
             }
         });
     });

@@ -10,7 +10,7 @@
                     <h5 class="card-title fw-semibold text-white">Tambah Berita</h5>
                 </div>
                 <div class="col-6 text-right">
-                    <a href="/admin/berita" type="button" class="btn btn-warning float-end">Kembali</a>
+                    <a href="{{ route('berita.index') }}" type="button" class="btn btn-warning float-end">Kembali</a>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
 </div>
 
 <div class="row">
-    <form method="POST" action="/admin/berita" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('berita.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-lg-8">
@@ -56,7 +56,7 @@
                         <div class="mb-3">
                             <img src="" class="img-preview img-fluid mb-3 mt-2" id="preview" style="border-radius: 5px; max-height:300px; overflow:hidden;"><br>
                             <label for="gambar" class="form-label">Gambar Slider <span style="color: red">*</span></label>
-                            <input class="form-control" type="file" id="gambar" name="gambar" onchange="previewImage()">
+                            <input class="form-control" type="file" id="gambar" name="gambar" onchange="previewImage(event)">
                             @error('gambar')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -95,10 +95,19 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="published_at" class="form-label">Tanggal Post (WIT) <small class="text-muted">(Opsional)</small></label>
+                            <label for="published_at" class="form-label">
+                                <i class="fas fa-calendar-alt me-1"></i>Tanggal Post (WIT) 
+                                <span style="color: red">*</span>
+                            </label>
                             <input type="datetime-local" class="form-control" name="published_at" id="published_at" 
-                                   value="{{ old('published_at', now()->timezone('Asia/Jayapura')->format('Y-m-d\TH:i')) }}">
-                            <small class="text-muted">Kosongkan untuk menggunakan waktu saat ini (Waktu Indonesia Timur)</small>
+                                   value="{{ old('published_at', now()->setTimezone('Asia/Jayapura')->format('Y-m-d\TH:i')) }}" required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <strong>Info:</strong> Tahun dari tanggal ini akan otomatis digunakan untuk filter di halaman berita publik.
+                                <br>
+                                <i class="fas fa-filter me-1"></i>
+                                Pengunjung dapat memfilter berita berdasarkan tahun publish ini.
+                            </div>
                             @error('published_at')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -117,16 +126,12 @@
     document.addEventListener('DOMContentLoaded', function() {
         var now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        document.getElementById('published_at').value = now.toISOString().slice(0,16);
+        var publishedAt = document.getElementById('published_at');
+        if (publishedAt && !publishedAt.value) {
+            publishedAt.value = now.toISOString().slice(0,16);
+        }
     });
 
-    // Generate Slug Otomatis
-                    </div>
-               </div>
-            </div>
-        </div>
-    </form>
-</div>
 
 <!-- Generate Slug Otomatis -->
 <script>
@@ -142,8 +147,16 @@
 
 <!-- Preview Image -->
 <script>
-    function previewImage(){
-        preview.src=URL.createObjectURL(event.target.files[0]);
+    function previewImage(e){
+        try {
+            var fileInput = e && e.target ? e.target : document.getElementById('gambar');
+            var previewEl = document.getElementById('preview');
+            if (fileInput && fileInput.files && fileInput.files[0] && previewEl) {
+                previewEl.src = URL.createObjectURL(fileInput.files[0]);
+            }
+        } catch(err) {
+            console.error(err);
+        }
     }
 </script>
 
