@@ -31,9 +31,23 @@
                         <div class="col">
                             <div class="mb-3">
                                 <label for="logo" class="form-label">Logo Situs <span style="color: red">*</span></label><br>
-                                <img src="{{ asset('storage/' . $situs->logo) }}" alt="Logo-preview" style="max-width: 100%; max-height: 145px; width: auto; height: auto; display: block; margin: 0 auto; object-fit: contain; background: transparent; border-radius: 8px;" class="img-preview py-3" id="preview">
-                                <input type="file" class="form-control" name="logo" id="logo"  onchange="previewImage()">
-                                <i>Disarankan : 450 x 145 pixel</i>
+                                <img src="{{ asset('storage/' . $situs->logo) }}" alt="Logo-preview" style="
+                                    width: 100px; 
+                                    height: 100px; 
+                                    object-fit: cover; 
+                                    object-position: center; 
+                                    display: block; 
+                                    margin: 0 auto 10px; 
+                                    border-radius: 8px; 
+                                    border: 2px solid #e2e8f0;
+                                    background: #f8f9fa;
+                                " class="img-preview" id="preview">
+                                <input type="file" class="form-control" name="logo" id="logo"  onchange="previewImage()" accept="image/*">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    <strong>Rekomendasi:</strong> Gunakan logo dengan aspek rasio 1:1 (persegi) untuk hasil terbaik. 
+                                    Format: JPG, PNG | Ukuran ideal: 200x200 - 500x500 pixel
+                                </small>
                                 @error('logo')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -96,8 +110,15 @@
 
         reader.onload = function(e){
             preview.src = e.target.result;
+            preview.style.width = '100px';
+            preview.style.height = '100px';
+            preview.style.objectFit = 'cover';
+            preview.style.objectPosition = 'center';
         };
-        reader.readAsDataURL(file);
+        
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     }
 </script>
 @endsection

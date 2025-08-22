@@ -34,6 +34,43 @@
   <!-- Additional Styles -->
   @yield('styles')
   
+  <!-- Fixed Navbar & Smooth Scroll Styles -->
+  <style>
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+    
+    body {
+      padding-top: 0 !important;
+      margin: 0 !important;
+    }
+    
+    #hero {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+    
+    /* Ensure content sections have proper spacing for fixed navbar */
+    section:not(#hero) {
+      padding-top: 100px;
+      margin-top: -80px;
+    }
+    
+    /* Override any conflicting navbar styles */
+    .navbar,
+    .navbar-brand,
+    .navbar-nav {
+      background: transparent !important;
+    }
+    
+    /* Smooth page transitions */
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+  
   <!-- Custom IDM Menu Style -->
   <style>
     .navbar .nav-link.scrollto:hover .fas,

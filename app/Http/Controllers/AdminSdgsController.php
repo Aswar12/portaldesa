@@ -49,24 +49,23 @@ class AdminSdgsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'judul'                => 'required|string|max:255',
-            'target_1'            => 'nullable|string',
-            'target_2'            => 'nullable|string', 
-            'target_3'            => 'nullable|string',
-            'target_4'            => 'nullable|string',
-            'target_5'            => 'nullable|string',
-            'skor_1'              => 'nullable|numeric|min:0|max:100',
-            'skor_2'              => 'nullable|numeric|min:0|max:100',
-            'skor_3'              => 'nullable|numeric|min:0|max:100',
-            'skor_4'              => 'nullable|numeric|min:0|max:100',
-            'skor_5'              => 'nullable|numeric|min:0|max:100',
+            'judul'                => 'nullable|string|max:255',
+            'target_1'            => 'required|integer|min:1|max:5',
+            'target_2'            => 'required|integer|min:1|max:5', 
+            'target_3'            => 'required|integer|min:1|max:5',
+            'target_4'            => 'required|integer|min:1|max:5',
+            'target_5'            => 'required|integer|min:1|max:5',
             'tahun'               => 'required|integer|min:2020|max:2030',
             'keterangan'          => 'nullable|string',
             'gambar'              => 'nullable|mimes:jpg,png,jpeg|max:2048',
-            'tampil_infografis'   => 'boolean',
+            'infografis'          => 'boolean',
             'warna_chart'         => 'nullable|string|max:7'
         ], [
-            'judul.required'      => 'Judul wajib diisi!',
+            'target_1.required'   => 'Target 1 wajib diisi!',
+            'target_2.required'   => 'Target 2 wajib diisi!',
+            'target_3.required'   => 'Target 3 wajib diisi!',
+            'target_4.required'   => 'Target 4 wajib diisi!',
+            'target_5.required'   => 'Target 5 wajib diisi!',
             'tahun.required'      => 'Tahun wajib diisi!',
             'gambar.mimes'        => 'Format gambar yang diizinkan: png, jpg, jpeg!',
             'gambar.max'          => 'Ukuran gambar maksimal 2MB!'
@@ -80,17 +79,25 @@ class AdminSdgsController extends Controller
 
         $data = $request->all();
         $data['user_id'] = auth()->user()->id;
-        $data['tampil_infografis'] = $request->has('tampil_infografis');
+        $data['tampil_infografis'] = $request->has('infografis');
         
-        // Hitung skor rata-rata
-        $scores = array_filter([
-            $data['skor_1'] ?? 0,
-            $data['skor_2'] ?? 0,
-            $data['skor_3'] ?? 0,
-            $data['skor_4'] ?? 0,
-            $data['skor_5'] ?? 0
-        ]);
-        $data['skor_rata_rata'] = count($scores) > 0 ? array_sum($scores) / count($scores) : 0;
+        // Hitung skor rata-rata dari target yang dipilih
+        $targets = [
+            $data['target_1'] ?? 0,
+            $data['target_2'] ?? 0,
+            $data['target_3'] ?? 0,
+            $data['target_4'] ?? 0,
+            $data['target_5'] ?? 0
+        ];
+        $validTargets = array_filter($targets);
+        $data['skor_rata_rata'] = count($validTargets) > 0 ? array_sum($validTargets) / count($validTargets) : 0;
+
+        // Set skor individual sama dengan target
+        $data['skor_1'] = $data['target_1'] ?? 0;
+        $data['skor_2'] = $data['target_2'] ?? 0;
+        $data['skor_3'] = $data['target_3'] ?? 0;
+        $data['skor_4'] = $data['target_4'] ?? 0;
+        $data['skor_5'] = $data['target_5'] ?? 0;
 
         // Handle gambar upload
         if ($request->hasFile('gambar')) {
@@ -124,22 +131,26 @@ class AdminSdgsController extends Controller
         $sdgs = Sdgs::findOrFail($id);
         
         $validator = Validator::make($request->all(), [
-            'judul'                => 'required|string|max:255',
-            'target_1'            => 'nullable|string',
-            'target_2'            => 'nullable|string', 
-            'target_3'            => 'nullable|string',
-            'target_4'            => 'nullable|string',
-            'target_5'            => 'nullable|string',
-            'skor_1'              => 'nullable|numeric|min:0|max:100',
-            'skor_2'              => 'nullable|numeric|min:0|max:100',
-            'skor_3'              => 'nullable|numeric|min:0|max:100',
-            'skor_4'              => 'nullable|numeric|min:0|max:100',
-            'skor_5'              => 'nullable|numeric|min:0|max:100',
+            'judul'                => 'nullable|string|max:255',
+            'target_1'            => 'required|integer|min:1|max:5',
+            'target_2'            => 'required|integer|min:1|max:5', 
+            'target_3'            => 'required|integer|min:1|max:5',
+            'target_4'            => 'required|integer|min:1|max:5',
+            'target_5'            => 'required|integer|min:1|max:5',
             'tahun'               => 'required|integer|min:2020|max:2030',
             'keterangan'          => 'nullable|string',
             'gambar'              => 'nullable|mimes:jpg,png,jpeg|max:2048',
-            'tampil_infografis'   => 'boolean',
+            'infografis'          => 'boolean',
             'warna_chart'         => 'nullable|string|max:7'
+        ], [
+            'target_1.required'   => 'Target 1 wajib diisi!',
+            'target_2.required'   => 'Target 2 wajib diisi!',
+            'target_3.required'   => 'Target 3 wajib diisi!',
+            'target_4.required'   => 'Target 4 wajib diisi!',
+            'target_5.required'   => 'Target 5 wajib diisi!',
+            'tahun.required'      => 'Tahun wajib diisi!',
+            'gambar.mimes'        => 'Format gambar yang diizinkan: png, jpg, jpeg!',
+            'gambar.max'          => 'Ukuran gambar maksimal 2MB!'
         ]);
 
         if ($validator->fails()) {
@@ -149,17 +160,25 @@ class AdminSdgsController extends Controller
         }
 
         $data = $request->all();
-        $data['tampil_infografis'] = $request->has('tampil_infografis');
+        $data['tampil_infografis'] = $request->has('infografis');
         
-        // Hitung skor rata-rata
-        $scores = array_filter([
-            $data['skor_1'] ?? 0,
-            $data['skor_2'] ?? 0,
-            $data['skor_3'] ?? 0,
-            $data['skor_4'] ?? 0,
-            $data['skor_5'] ?? 0
-        ]);
-        $data['skor_rata_rata'] = count($scores) > 0 ? array_sum($scores) / count($scores) : 0;
+        // Hitung skor rata-rata dari target yang dipilih
+        $targets = [
+            $data['target_1'] ?? 0,
+            $data['target_2'] ?? 0,
+            $data['target_3'] ?? 0,
+            $data['target_4'] ?? 0,
+            $data['target_5'] ?? 0
+        ];
+        $validTargets = array_filter($targets);
+        $data['skor_rata_rata'] = count($validTargets) > 0 ? array_sum($validTargets) / count($validTargets) : 0;
+
+        // Set skor individual sama dengan target
+        $data['skor_1'] = $data['target_1'] ?? 0;
+        $data['skor_2'] = $data['target_2'] ?? 0;
+        $data['skor_3'] = $data['target_3'] ?? 0;
+        $data['skor_4'] = $data['target_4'] ?? 0;
+        $data['skor_5'] = $data['target_5'] ?? 0;
 
         // Handle gambar upload
         if ($request->hasFile('gambar')) {
