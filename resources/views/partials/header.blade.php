@@ -1,12 +1,12 @@
 <!-- ======= Header ======= -->
 <style>
-/* Modern Glass-Morphism Navbar */
+/* Modern Glass-Morphism Navbar - Simplified */
 #header {
-  background: rgba(0, 0, 0, 0.02) !important;
-  backdrop-filter: blur(30px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(200%) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  border: none !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
@@ -19,86 +19,72 @@
 #header.transparent,
 #header.header-transparent {
   background: rgba(0, 0, 0, 0) !important;
-  backdrop-filter: blur(25px) saturate(250%) !important;
-  -webkit-backdrop-filter: blur(25px) saturate(250%) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.02) !important;
+  backdrop-filter: blur(15px) saturate(250%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(250%) !important;
+  box-shadow: none !important;
 }
 
 /* Scrolled state - more solid for readability */
 #header.header-scrolled,
 #header.scrolled {
-  background: rgba(255, 255, 255, 0.92) !important;
-  backdrop-filter: blur(35px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(35px) saturate(180%) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(25px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Logo styling with square aspect ratio */
+/* Logo styling */
 #header .logo img {
   width: 55px !important;
   height: 55px !important;
   object-fit: cover !important;
   object-position: center !important;
   border-radius: 8px !important;
-  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.4)) brightness(1.15) contrast(1.25) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  border: 2px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-/* Logo in transparent state */
-#header.transparent .logo img,
-#header.header-transparent .logo img {
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)) brightness(1.2) contrast(1.35) !important;
-  border: 2px solid rgba(255, 255, 255, 0.3) !important;
-  background: rgba(255, 255, 255, 0.15) !important;
-}
-
-/* Logo hover effect */
-#header .logo img:hover {
-  transform: scale(1.05) !important;
-  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.5)) brightness(1.3) contrast(1.4) !important;
-}
-
-/* Navigation styling with elegant glass effect */
+/* Navigation styling - Remove borders */
 #navbar ul {
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(15px) !important;
-  border-radius: 30px !important;
-  padding: 8px 15px !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 #navbar ul li a {
-  color: #ffffff !important;
+  color: rgba(255, 255, 255, 0.95) !important;
   font-weight: 600 !important;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  padding: 12px 20px !important;
-  margin: 0 4px !important;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7) !important;
+  transition: all 0.3s ease !important;
+  padding: 10px 18px !important;
   border-radius: 25px !important;
-  position: relative !important;
+  border: none !important;
+}
+
+#header.scrolled #navbar ul li a {
+  color: rgba(51, 51, 51, 0.9) !important;
+  text-shadow: none !important;
 }
 
 #navbar ul li a:hover,
 #navbar ul li a.active {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.25) !important;
-  backdrop-filter: blur(20px) !important;
-  transform: translateY(-2px) scale(1.02) !important;
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25), 
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9) !important;
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  transform: translateY(-2px) !important;
+  border: none !important;
 }
 
-/* Dropdown menu styling */
+#header.scrolled #navbar ul li a:hover,
+#header.scrolled #navbar ul li a.active {
+  color: #fff !important;
+  background: rgba(52, 152, 219, 0.9) !important;
+}
+
+/* Dropdown menu styling - Remove borders */
 #navbar ul li.dropdown ul {
   background: rgba(255, 255, 255, 0.96) !important;
   backdrop-filter: blur(30px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border: none !important;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
   border-radius: 15px !important;
   padding: 10px 0 !important;
@@ -111,6 +97,7 @@
   padding: 12px 25px !important;
   border-radius: 0 !important;
   margin: 0 !important;
+  border: none !important;
 }
 
 #navbar ul li.dropdown ul li a:hover {
@@ -126,7 +113,7 @@
   backdrop-filter: blur(15px) !important;
   border-radius: 10px !important;
   padding: 10px !important;
-  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border: none !important;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-size: 20px !important;
@@ -135,12 +122,6 @@
 .mobile-nav-toggle:hover {
   background: rgba(255, 255, 255, 0.3) !important;
   transform: scale(1.1) rotate(90deg) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-}
-
-/* Smooth scrolling effect for all links */
-#navbar ul li a[href^="#"] {
-  scroll-behavior: smooth !important;
 }
 
 /* Animation for page load */

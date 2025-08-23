@@ -1,1 +1,0 @@
-docker exec portaldesa-db sh -c 'exec mysqldump -u root -p"$MYSQL_ROOT_PASSWORD" DESA-LARAVEL' > c:/laragon/www/portaldesa/backup-portaldesa-$(date +%Y%m%d-%H%M%S).sql

@@ -14,40 +14,145 @@
             <div class="carousel-content container">
               <h2 class="animate__animated animate__fadeInDown">{{ $slider->judul }}</h2>
               <p class="animate__animated animate__fadeInUp">{{ $slider->deskripsi }}</p>
-              <a href="{{ $slider->link_btn }}" class="btn-get-started animate__animated animate__fadeInUp scrollto">Baca Selengkapnya</a>
             </div>
           </div>
         </div>
         @endforeach
       </div>
 
-      <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-      </a>
-      <a class="carousel-control-next" href="#heroCarousel" role="button" data-bs-slide="next">
-        <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
-      </a>
-
     </div>
   </div>
 </section><!-- End Hero -->
 
+<!-- ======= Statistik Penduduk Section ======= -->
+<section id="stats" class="stats-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Statistik Penduduk Desa</h2>
+            <p>Data terkini mengenai kependudukan dan demografis warga desa kami</p>
+        </div>
+        <div class="row">
+            <!-- Total Penduduk -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $totalPenduduk ?? 2456 }}">0</span>
+                    <div class="stat-label">Total Penduduk</div>
+                </div>
+            </div>
+            
+            <!-- Kepala Keluarga -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $totalKK ?? 687 }}">0</span>
+                    <div class="stat-label">Kepala Keluarga</div>
+                </div>
+            </div>
+            
+            <!-- Laki-laki -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-male"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $lakiLaki ?? 1289 }}">0</span>
+                    <div class="stat-label">Laki-laki</div>
+                </div>
+            </div>
+            
+            <!-- Perempuan -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-female"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $perempuan ?? 1167 }}">0</span>
+                    <div class="stat-label">Perempuan</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <!-- Penduduk Produktif -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $usiaProduktif ?? 1865 }}">0</span>
+                    <div class="stat-label">Usia Produktif</div>
+                </div>
+            </div>
+            
+            <!-- Lansia -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-wheelchair"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $lansia ?? 198 }}">0</span>
+                    <div class="stat-label">Lansia (60+)</div>
+                </div>
+            </div>
+            
+            <!-- Balita -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $balita ?? 165 }}">0</span>
+                    <div class="stat-label">Balita (0-4)</div>
+                </div>
+            </div>
+            
+            <!-- Petani -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $petani ?? 428 }}">0</span>
+                    <div class="stat-label">Petani</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- End Statistik Penduduk Section -->
+
 <!-- ======= Services Section ======= -->
 <section id="services" class="services">
   <div class="container" data-aos="fade-up">
+    <div class="section-title">
+      <h2>Layanan Desa</h2>
+      <p>Akses mudah ke berbagai layanan dan informasi desa</p>
+    </div>
 
-    <div class="row">
-      <div class="col-lg-3 col-md-6 icon-box" data-aos="fade-up">
-        <div class="icon"><i class="bi bi-globe-asia-australia"></i></div>
-        <h4 class="title"><a href="/peta-desa">Peta Desa</a></h4>
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="icon-box">
+          <div class="icon"><i class="bi bi-geo-alt-fill"></i></div>
+          <h4 class="title"><a href="/peta-desa">Peta Desa</a></h4>
+        </div>
       </div>
-      <div class="col-lg-3 col-md-6 icon-box" data-aos="fade-up">
-        <div class="icon"><i class="bi bi-shop"></i></div>
-        <h4 class="title"><a href="/umkm">UMKM Desa</a></h4>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="icon-box">
+          <div class="icon"><i class="bi bi-shop"></i></div>
+          <h4 class="title"><a href="/umkm">UMKM Desa</a></h4>
+        </div>
       </div>
-      <div class="col-lg-3 col-md-6 icon-box" data-aos="fade-up">
-        <div class="icon"><i class="bi bi-telephone-forward"></i></div>
-        <h4 class="title"><a href="/kontak">Pengaduan</a></h4>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="icon-box">
+          <div class="icon"><i class="bi bi-chat-square-text-fill"></i></div>
+          <h4 class="title"><a href="/kontak">Pengaduan</a></h4>
+        </div>
       </div>
     </div>
     

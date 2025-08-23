@@ -31,6 +31,9 @@
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
   
+  <!-- Custom Main CSS File (Pusat) -->
+  <link href="/assets/css/main.css" rel="stylesheet">
+  
   <!-- Additional Styles -->
   @yield('styles')
   
@@ -132,6 +135,9 @@
 
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
+  
+  <!-- Custom Main JS File (Pusat) -->
+  <script src="/assets/js/main-custom.js"></script>
 
   <!-- Sweet Alert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
