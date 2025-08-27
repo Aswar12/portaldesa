@@ -9,18 +9,19 @@
 #hamburger-btn,
 .hamburger-btn {
     display: none !important; /* Hidden by default */
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 60px !important;
-    height: 60px !important;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    border: 3px solid rgba(255, 255, 255, 0.9) !important;
-    border-radius: 50% !important;
+    position: absolute !important;
+    top: 50% !important;
+    right: 15px !important;
+    transform: translateY(-50%) !important;
+    width: 48px !important;
+    height: 48px !important;
+    background: #2A52BE !important; /* Match with website theme */
+    border: none !important;
+    border-radius: 8px !important;
     cursor: pointer !important;
     z-index: 99999 !important;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4) !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(42, 82, 190, 0.2) !important;
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
@@ -189,31 +190,52 @@
     animation: menuSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-@keyframes menuSlideIn {
-    0% {
-        transform: translateY(50px) scale(0.9);
-        opacity: 0;
+.mobile-menu-overlay.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.mobile-menu-overlay.active .mobile-menu-content {
+    right: 0 !important;
+}
+
+/* Remove borders from desktop navbar */
+@media screen and (min-width: 992px) {
+    .navbar ul {
+        border: none !important;
     }
-    100% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
+    .navbar ul li a {
+        border: none !important;
+    }
+    .dropdown-menu {
+        border: none !important;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1) !important;
     }
 }
 
 /* Menu item hover effects */
 .mobile-menu-content ul li a:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    color: white !important;
-    transform: translateY(-3px) scale(1.02) !important;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;
-    border-color: rgba(102, 126, 234, 0.5) !important;
+    background: #f8f9fa !important;
+    color: #2A52BE !important;
+}
+
+.mobile-menu-content ul li a.active {
+    color: #2A52BE !important;
+    background: #f8f9fa !important;
 }
 
 /* Special styling for login button */
+.mobile-menu-content ul li:last-child a {
+    margin: 20px 0;
+    background: #2A52BE !important;
+    color: white !important;
+    padding: 12px 20px !important;
+    border-radius: 6px !important;
+    text-align: center !important;
+}
+
 .mobile-menu-content ul li:last-child a:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%) !important;
-    transform: translateY(-3px) scale(1.05) !important;
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5) !important;
+    opacity: 0.9 !important;
 }
 </style>
 
@@ -337,22 +359,35 @@
 </header><!-- End Header -->
 
 <!-- Mobile Menu Overlay -->
-<div class="mobile-menu-overlay" id="mobile-menu-overlay">
+<div class="mobile-menu-overlay" id="mobile-menu-overlay" style="
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+">
     <div class="mobile-menu-content" style="
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
-        padding: 40px 30px !important;
-        border-radius: 25px !important;
-        max-width: 380px !important;
-        width: 90% !important;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
-        backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        transform: translateY(50px) scale(0.9) !important;
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 300px;
+        background: #ffffff !important;
+        padding: 80px 20px 20px !important;
+        overflow-y: auto !important;
+        transition: right 0.3s ease !important;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
     ">
         <ul style="list-style: none; margin: 0; padding: 0;">
-            <li><a href="/" style="display: block; padding: 18px 30px; color: #333; text-decoration: none; border-radius: 15px; transition: all 0.3s ease; font-weight: 600; font-size: 17px; margin: 8px 0; border: 1px solid rgba(102, 126, 234, 0.1);">🏠 Beranda</a></li>
-            <li><a href="/wilayah" style="display: block; padding: 18px 30px; color: #333; text-decoration: none; border-radius: 15px; transition: all 0.3s ease; font-weight: 600; font-size: 17px; margin: 8px 0; border: 1px solid rgba(102, 126, 234, 0.1);">🗺️ Wilayah</a></li>
+            <li><a href="/" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; font-size: 15px; border-bottom: 1px solid #f5f5f5;">Beranda</a></li>
+            <li><a href="/wilayah" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; font-size: 15px; border-bottom: 1px solid #f5f5f5;">Wilayah</a></li>
             <li><a href="/sejarah" style="display: block; padding: 18px 30px; color: #333; text-decoration: none; border-radius: 15px; transition: all 0.3s ease; font-weight: 600; font-size: 17px; margin: 8px 0; border: 1px solid rgba(102, 126, 234, 0.1);">📚 Sejarah</a></li>
             <li><a href="/visi-misi" style="display: block; padding: 18px 30px; color: #333; text-decoration: none; border-radius: 15px; transition: all 0.3s ease; font-weight: 600; font-size: 17px; margin: 8px 0; border: 1px solid rgba(102, 126, 234, 0.1);">🎯 Visi & Misi</a></li>
             <li><a href="/perangkat-desa" style="display: block; padding: 18px 30px; color: #333; text-decoration: none; border-radius: 15px; transition: all 0.3s ease; font-weight: 600; font-size: 17px; margin: 8px 0; border: 1px solid rgba(102, 126, 234, 0.1);">👥 Perangkat Desa</a></li>
