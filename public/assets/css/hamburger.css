@@ -1,0 +1,470 @@
+/* ===== HAMBURGER MENU STYLES ===== */
+/* Clean, conflict-free hamburger menu styles */
+
+/* ===== CONFLICT RESOLUTION ===== */
+/* Override existing mobile-nav-toggle styles from style.css */
+.mobile-nav-toggle,
+.mobile-nav-toggle.bi,
+.mobile-nav-toggle.bi-list,
+.mobile-nav-toggle.bi-x {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Override existing navbar-mobile styles */
+.navbar-mobile {
+  display: none !important;
+}
+
+/* Hide navbar ul on mobile by default */
+@media screen and (max-width: 991px) {
+  .navbar ul {
+    display: none !important;
+  }
+}
+
+/* ===== HAMBURGER BUTTON STYLES ===== */
+.hamburger-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: #ffffff;
+  border: 3px solid #007bff;
+  border-radius: 12px;
+  cursor: pointer;
+  z-index: 99999;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  font-size: 0;
+  /* Hide any text */
+}
+
+.hamburger-btn:hover {
+  background: #007bff;
+  border-color: #ffffff;
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.6);
+}
+
+.hamburger-btn.active {
+  background: #007bff;
+  border-color: #ffffff;
+}
+
+.hamburger-btn.active .hamburger-line {
+  background: #ffffff;
+}
+
+.hamburger-line {
+  display: block;
+  width: 30px;
+  height: 4px;
+  background: #007bff;
+  margin: 5px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+  position: relative;
+}
+
+/* Hamburger animation */
+.hamburger-btn.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Show hamburger on mobile only - with high specificity */
+@media screen and (max-width: 991px) {
+
+  .hamburger-btn,
+  #hamburger-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+}
+
+/* ===== SUPER COOL HAMBURGER ENHANCEMENTS ===== */
+
+/* Add a subtle glow effect */
+#hamburger-btn::before,
+.hamburger-btn::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  filter: blur(8px);
+}
+
+#hamburger-btn:hover::before,
+.hamburger-btn:hover::before {
+  opacity: 0.7;
+}
+
+/* Add floating animation when active */
+#hamburger-btn.active,
+.hamburger-btn.active {
+  animation: hamburgerFloat 2s ease-in-out infinite;
+}
+
+@keyframes hamburgerFloat {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Add a subtle breathing effect */
+#hamburger-btn,
+.hamburger-btn {
+  animation: hamburgerBreathe 4s ease-in-out infinite;
+}
+
+@keyframes hamburgerBreathe {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Override any potential conflicts */
+@media screen and (min-width: 992px) {
+
+  #hamburger-btn,
+  .hamburger-btn {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: scale(0) !important;
+  }
+}
+
+/* Ensure mobile visibility with high specificity */
+@media screen and (max-width: 991px) {
+
+  #hamburger-btn,
+  .hamburger-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: scale(1) !important;
+  }
+}
+
+/* ===== MOBILE MENU OVERLAY ===== */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 99998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-content {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px 30px;
+  border-radius: 20px;
+  max-width: 350px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(30px);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-overlay.active .mobile-menu-content {
+  transform: translateY(0);
+}
+
+.mobile-menu-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mobile-menu-content ul li {
+  margin: 20px 0;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 10px;
+}
+
+.mobile-menu-content ul li:last-child {
+  border-bottom: none;
+}
+
+.mobile-menu-content ul li a {
+  display: block;
+  padding: 15px 25px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.mobile-menu-content ul li a:hover {
+  background: #007bff;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ===== PREVENT BODY SCROLL WHEN MENU IS OPEN ===== */
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== MOBILE NAVIGATION STYLES ===== */
+.navbar-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 99997;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-mobile ul {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px 30px;
+  border-radius: 20px;
+  max-width: 350px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(30px);
+  transition: all 0.3s ease;
+}
+
+.navbar-mobile.active ul {
+  transform: translateY(0);
+}
+
+.navbar-mobile ul li {
+  margin: 20px 0;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 10px;
+}
+
+.navbar-mobile ul li:last-child {
+  border-bottom: none;
+}
+
+.navbar-mobile ul li a {
+  display: block;
+  padding: 15px 25px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.navbar-mobile ul li a:hover {
+  background: #007bff;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Dropdown styles for mobile */
+.navbar-mobile .dropdown ul {
+  position: static;
+  display: none;
+  background: rgba(255, 255, 255, 0.9);
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-mobile .dropdown-active ul {
+  display: block;
+}
+
+.navbar-mobile .dropdown ul li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  margin: 0;
+  padding-bottom: 5px;
+}
+
+.navbar-mobile .dropdown ul li:last-child {
+  border-bottom: none;
+}
+
+.navbar-mobile .dropdown ul li a {
+  padding: 10px 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+.navbar-mobile .dropdown ul li a:hover {
+  background: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+/* ===== MOBILE NAVIGATION STYLES ===== */
+/* Alternative mobile navbar styles (if needed) */
+.navbar-mobile-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 99997;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-mobile-custom ul {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px 30px;
+  border-radius: 20px;
+  max-width: 350px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(30px);
+  transition: all 0.3s ease;
+}
+
+.navbar-mobile-custom.active ul {
+  transform: translateY(0);
+}
+
+.navbar-mobile-custom ul li {
+  margin: 20px 0;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 10px;
+}
+
+.navbar-mobile-custom ul li:last-child {
+  border-bottom: none;
+}
+
+.navbar-mobile-custom ul li a {
+  display: block;
+  padding: 15px 25px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.navbar-mobile-custom ul li a:hover {
+  background: #007bff;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Dropdown styles for mobile */
+.navbar-mobile-custom .dropdown ul {
+  position: static;
+  display: none;
+  background: rgba(255, 255, 255, 0.9);
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-mobile-custom .dropdown-active ul {
+  display: block;
+}
+
+.navbar-mobile-custom .dropdown ul li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  margin: 0;
+  padding-bottom: 5px;
+}
+
+.navbar-mobile-custom .dropdown ul li:last-child {
+  border-bottom: none;
+}
+
+.navbar-mobile-custom .dropdown ul li a {
+  padding: 10px 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+.navbar-mobile-custom .dropdown ul li a:hover {
+  background: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+/* Hilangkan border pada navbar dan topbar */
+#topbar {
+  border-bottom: none !important;
+}
+
+#header {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.navbar {
+  border: none !important;
+}
+
+.navbar ul {
+  border: none !important;
+}

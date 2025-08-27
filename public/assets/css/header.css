@@ -1,0 +1,70 @@
+/* ===== HEADER SCROLL EFFECT STYLES ===== */
+/* Clean header transparency and scroll effects */
+
+.header-transparent {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.header-scrolled {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Navigation link styles for transparent header */
+.header-transparent .nav-link {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+.header-transparent .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+/* Navigation link styles for scrolled header */
+.header-scrolled .nav-link {
+    color: #2c3e50 !important;
+    text-shadow: none !important;
+}
+
+.header-scrolled .nav-link:hover {
+    background: rgba(52, 152, 219, 0.1) !important;
+    color: #3498db !important;
+}
+
+/* Navbar container styles */
+.header-transparent #navbar ul {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.header-scrolled #navbar ul {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Mobile navigation toggle styles for different header states */
+.header-transparent .mobile-nav-toggle {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.18) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.header-scrolled .mobile-nav-toggle {
+    color: #2c3e50 !important;
+    background: rgba(44, 62, 80, 0.1) !important;
+    border-color: rgba(44, 62, 80, 0.2) !important;
+}
+
+/* Smooth transitions for all header elements */
+header {
+    transition: all 0.3s ease !important;
+}
+
+header * {
+    transition: all 0.3s ease !important;
+}
