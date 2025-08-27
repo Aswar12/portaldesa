@@ -1174,13 +1174,35 @@ body {
 ul {
     border: none !important;
     outline: none !important;
-    border-radius: 8px !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 /* Ensure no borders on list items */
 ul li {
     border: none !important;
     outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove borders from navbar dropdown ul elements */
+.navbar ul li.dropdown ul {
+    background: rgba(42, 82, 190, 0.95) !important;
+    backdrop-filter: blur(15px) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 10px 0 !important;
+    min-width: 200px !important;
+}
+
+/* Remove borders from all dropdown menus */
+.dropdown-menu {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 /* Enhanced dropdown menu styling for better readability */
@@ -1196,8 +1218,8 @@ ul li {
     background: rgba(42, 82, 190, 0.95) !important;
     backdrop-filter: blur(15px) !important;
     border: none !important;
-    border-radius: 8px !important;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     padding: 10px 0 !important;
     min-width: 200px !important;
 }
