@@ -134,21 +134,21 @@
     </div>
 
     <div class="row justify-content-center">
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-4 col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
         <div class="icon-box">
           <div class="icon"><i class="bi bi-geo-alt-fill"></i></div>
           <h4 class="title"><a href="/peta-desa">Peta Desa</a></h4>
         </div>
       </div>
       
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+      <div class="col-lg-4 col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
         <div class="icon-box">
           <div class="icon"><i class="bi bi-shop"></i></div>
           <h4 class="title"><a href="/umkm">UMKM Desa</a></h4>
         </div>
       </div>
       
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+      <div class="col-lg-4 col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
         <div class="icon-box">
           <div class="icon"><i class="bi bi-chat-square-text-fill"></i></div>
           <h4 class="title"><a href="/kontak">Pengaduan</a></h4>

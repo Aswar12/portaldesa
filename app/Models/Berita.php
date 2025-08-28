@@ -26,19 +26,7 @@ class Berita extends Model
     {
         parent::boot();
         
-        static::creating(function ($berita) {
-            // Auto-generate year from created_at if year is not provided
-            if (!$berita->year && $berita->created_at) {
-                $berita->year = $berita->created_at->year;
-            }
-        });
-        
-        static::updating(function ($berita) {
-            // Auto-generate year from created_at if year is not provided during update
-            if (!$berita->year && $berita->created_at) {
-                $berita->year = $berita->created_at->year;
-            }
-        });
+        // Removed references to year column as it doesn't exist in the database
     }
 
     public function sluggable(): array

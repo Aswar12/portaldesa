@@ -34,6 +34,9 @@
   <!-- Custom Main CSS File (Pusat) -->
   <link href="/assets/css/main.css" rel="stylesheet">
   
+  <!-- Custom CSS File -->
+  <link href="/assets/css/custom.css" rel="stylesheet">
+  
   <!-- Additional Styles -->
   @yield('styles')
   

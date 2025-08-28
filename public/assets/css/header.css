@@ -39,15 +39,29 @@
 /* Navbar container styles */
 .header-transparent #navbar ul {
     background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border: none !important;
 }
 
 .header-scrolled #navbar ul {
     background: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
 }
 
 /* Mobile navigation toggle styles for different header states */
+
+/* Ensure no borders on navbar elements */
+#navbar,
+#navbar ul,
+#navbar li,
+#navbar a,
+.navbar,
+.navbar ul,
+.navbar li,
+.navbar a {
+    border: none !important;
+    outline: none !important;
+}
+
 .header-transparent .mobile-nav-toggle {
     color: #ffffff !important;
     background: rgba(255, 255, 255, 0.18) !important;
