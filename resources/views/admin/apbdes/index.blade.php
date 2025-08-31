@@ -206,62 +206,75 @@
 
     <script>
         $(document).ready(function() {
-            // Delay DataTable initialization to ensure DOM is fully loaded
-            setTimeout(function() {
-                $('#table_id').DataTable({
-                    "pageLength": 25,
-                    "responsive": false,
-                    "autoWidth": false,
-                    "processing": true,
-                    "language": {
-                        "emptyTable": "Tidak ada data yang tersedia",
-                        "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                        "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
-                        "infoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
-                        "lengthMenu": "Tampilkan _MENU_ entri",
-                        "loadingRecords": "Sedang memuat...",
-                        "processing": "Sedang memproses...",
-                        "search": "Cari:",
-                        "zeroRecords": "Tidak ditemukan data yang sesuai",
-                        "paginate": {
-                            "first": "Pertama",
-                            "last": "Terakhir",
-                            "next": "Selanjutnya",
-                            "previous": "Sebelumnya"
-                        }
-                    },
-                    "columnDefs": [
-                        { "orderable": false, "targets": [0, 2, 9] }, // Disable sorting for checkbox, image and action columns
-                        { "width": "3%", "targets": 0 },
-                        { "width": "5%", "targets": 1 },
-                        { "width": "10%", "targets": 2 },
-                        { "width": "20%", "targets": 3 },
-                        { "width": "10%", "targets": 4 },
-                        { "width": "8%", "targets": 5 },
-                        { "width": "12%", "targets": 6 },
-                        { "width": "12%", "targets": 7 },
-                        { "width": "8%", "targets": 8 },
-                        { "width": "15%", "targets": 9 }
-                    ]
-                });
-            }, 100);
+            // Initialize DataTable only if there are data rows (not just empty state)
+            var tableRows = $('#table_id tbody tr').length;
+            var hasData = $('#table_id tbody tr:first td').attr('colspan') === undefined;
+            
+            if (hasData && tableRows > 0) {
+                // Delay DataTable initialization to ensure DOM is fully loaded
+                setTimeout(function() {
+                    $('#table_id').DataTable({
+                        "pageLength": 25,
+                        "responsive": false,
+                        "autoWidth": false,
+                        "processing": true,
+                        "language": {
+                            "emptyTable": "Tidak ada data yang tersedia",
+                            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+                            "infoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+                            "lengthMenu": "Tampilkan _MENU_ entri",
+                            "loadingRecords": "Sedang memuat...",
+                            "processing": "Sedang memproses...",
+                            "search": "Cari:",
+                            "zeroRecords": "Tidak ditemukan data yang sesuai",
+                            "paginate": {
+                                "first": "Pertama",
+                                "last": "Terakhir",
+                                "next": "Selanjutnya",
+                                "previous": "Sebelumnya"
+                            }
+                        },
+                        "columnDefs": [
+                            { "orderable": false, "targets": [0, 2, 9] }, // Disable sorting for checkbox, image and action columns
+                            { "width": "3%", "targets": 0 },
+                            { "width": "5%", "targets": 1 },
+                            { "width": "10%", "targets": 2 },
+                            { "width": "20%", "targets": 3 },
+                            { "width": "10%", "targets": 4 },
+                            { "width": "8%", "targets": 5 },
+                            { "width": "12%", "targets": 6 },
+                            { "width": "12%", "targets": 7 },
+                            { "width": "8%", "targets": 8 },
+                            { "width": "15%", "targets": 9 }
+                        ]
+                    });
+                }, 100);
+            } else {
+                // If no data, just make the table responsive without DataTables features
+                $('#table_id').addClass('table-responsive');
+            }
 
-            // Select All functionality
+            // Select All functionality - Only work if there's data
             $(document).on('change', '#selectAll', function() {
-                $('.row-checkbox').prop('checked', this.checked);
-                updateSelectedCount();
+                if (hasData && tableRows > 0) {
+                    $('.row-checkbox').prop('checked', this.checked);
+                    updateSelectedCount();
+                }
             });
 
-            // Individual checkbox change
+            // Individual checkbox change - Only work if there's data
             $(document).on('change', '.row-checkbox', function() {
-                updateSelectedCount();
-                
-                // Update select all checkbox
-                var totalCheckboxes = $('.row-checkbox').length;
-                var checkedCheckboxes = $('.row-checkbox:checked').length;
-                
-                $('#selectAll').prop('indeterminate', checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
-                $('#selectAll').prop('checked', checkedCheckboxes === totalCheckboxes);
+                if (hasData && tableRows > 0) {
+                    updateSelectedCount();
+                    
+                    // Update select all checkbox
+                    var totalCheckboxes = $('.row-checkbox').length;
+                    var checkedCheckboxes = $('.row-checkbox:checked').length;
+                    
+                    $('#selectAll').prop('indeterminate', checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+                    $('#selectAll').prop('checked', checkedCheckboxes === totalCheckboxes);
+                }
             });
 
             // Update selected count and show/hide delete button
@@ -269,11 +282,18 @@
                 var selectedCount = $('.row-checkbox:checked').length;
                 $('#selectedCount').text(selectedCount);
                 
-                if (selectedCount > 0) {
+                // Only show delete button if there's data and something is selected
+                if (selectedCount > 0 && hasData && tableRows > 0) {
                     $('#deleteSelectedBtn').show();
                 } else {
                     $('#deleteSelectedBtn').hide();
                 }
+            }
+
+            // Hide bulk delete button initially if no data
+            if (!hasData || tableRows === 0) {
+                $('#deleteSelectedBtn').hide();
+                $('#selectAll').prop('disabled', true);
             }
 
             // Bulk delete with double confirmation
