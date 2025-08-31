@@ -377,22 +377,22 @@
             <div class="stats-description">Jumlah balita yang dipantau</div>
         </div>
 
-        <div class="stats-card danger">
-            <div class="stats-label">Stunting Berat</div>
-            <div class="stats-value">{{ number_format($stuntingBerat) }}</div>
-            <div class="stats-description">{{ $totalBalita > 0 ? number_format(($stuntingBerat/$totalBalita)*100, 1) : 0 }}% dari total balita</div>
+        <div class="stats-card" style="background: linear-gradient(135deg, #ff9500 0%, #ff6348 100%); color: white;">
+            <div class="stats-label" style="color: rgba(255,255,255,0.8);">Balita Stunting</div>
+            <div class="stats-value" style="color: white;">{{ number_format($balita_stunting) }}</div>
+            <div class="stats-description" style="color: rgba(255,255,255,0.9);">{{ $totalBalita > 0 ? number_format(($balita_stunting/$totalBalita)*100, 1) : 0 }}% dari total balita</div>
         </div>
 
         <div class="stats-card warning">
-            <div class="stats-label">Stunting Sedang</div>
-            <div class="stats-value">{{ number_format($stuntingSedang) }}</div>
-            <div class="stats-description">{{ $totalBalita > 0 ? number_format(($stuntingSedang/$totalBalita)*100, 1) : 0 }}% dari total balita</div>
+            <div class="stats-label">Balita Kurus</div>
+            <div class="stats-value">{{ number_format($kurusBalita) }}</div>
+            <div class="stats-description">{{ $totalBalita > 0 ? number_format(($kurusBalita/$totalBalita)*100, 1) : 0 }}% dari total balita</div>
         </div>
 
-        <div class="stats-card" style="background: linear-gradient(135deg, #ff9500 0%, #ff6348 100%); color: white;">
-            <div class="stats-label" style="color: rgba(255,255,255,0.8);">Stunting Ringan</div>
-            <div class="stats-value" style="color: white;">{{ number_format($stuntingRingan) }}</div>
-            <div class="stats-description" style="color: rgba(255,255,255,0.9);">{{ $totalBalita > 0 ? number_format(($stuntingRingan/$totalBalita)*100, 1) : 0 }}% dari total balita</div>
+        <div class="stats-card" style="background: linear-gradient(135deg, #4e73df 0%, #5e72e4 100%); color: white;">
+            <div class="stats-label" style="color: rgba(255,255,255,0.8);">Balita Gemuk</div>
+            <div class="stats-value" style="color: white;">{{ number_format($gemukBalita) }}</div>
+            <div class="stats-description" style="color: rgba(255,255,255,0.9);">{{ $totalBalita > 0 ? number_format(($gemukBalita/$totalBalita)*100, 1) : 0 }}% dari total balita</div>
         </div>
 
         <div class="stats-card success">
@@ -429,31 +429,31 @@
 
                 <div class="progress-container">
                     <div class="progress-label">
-                        <span><i class="fas fa-circle me-2" style="color: #ff9500;"></i>Stunting Ringan</span>
-                        <span>{{ number_format($stuntingRingan) }} balita</span>
+                        <span><i class="fas fa-circle me-2" style="color: #ff9500;"></i>Stunting</span>
+                        <span>{{ number_format($balita_stunting) }} balita</span>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar" style="background-color: #ff9500; width: {{ $totalBalita > 0 ? ($stuntingRingan/$totalBalita)*100 : 0 }}%"></div>
+                        <div class="progress-bar" style="background-color: #ff9500; width: {{ $totalBalita > 0 ? ($balita_stunting/$totalBalita)*100 : 0 }}%"></div>
                     </div>
                 </div>
 
                 <div class="progress-container">
                     <div class="progress-label">
-                        <span><i class="fas fa-circle text-warning me-2"></i>Stunting Sedang</span>
-                        <span>{{ number_format($stuntingSedang) }} balita</span>
+                        <span><i class="fas fa-circle text-warning me-2"></i>Kurus</span>
+                        <span>{{ number_format($kurusBalita) }} balita</span>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar bg-warning" style="width: {{ $totalBalita > 0 ? ($stuntingSedang/$totalBalita)*100 : 0 }}%"></div>
+                        <div class="progress-bar bg-warning" style="width: {{ $totalBalita > 0 ? ($kurusBalita/$totalBalita)*100 : 0 }}%"></div>
                     </div>
                 </div>
 
                 <div class="progress-container">
                     <div class="progress-label">
-                        <span><i class="fas fa-circle text-danger me-2"></i>Stunting Berat</span>
-                        <span>{{ number_format($stuntingBerat) }} balita</span>
+                        <span><i class="fas fa-circle me-2" style="color: #4e73df;"></i>Gemuk</span>
+                        <span>{{ number_format($gemukBalita) }} balita</span>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar bg-danger" style="width: {{ $totalBalita > 0 ? ($stuntingBerat/$totalBalita)*100 : 0 }}%"></div>
+                        <div class="progress-bar" style="background-color: #4e73df; width: {{ $totalBalita > 0 ? ($gemukBalita/$totalBalita)*100 : 0 }}%"></div>
                     </div>
                 </div>
             </div>
@@ -492,49 +492,58 @@
         </div>
 
         <div class="row">
-            @foreach($historicalData as $data)
-            <div class="col-md mb-3">
-                <div class="text-center p-3 rounded" 
-                     style="background: {{ $data['persentase'] <= $targetNasional ? '#d4edda' : '#f8d7da' }}; 
-                            border: 1px solid {{ $data['persentase'] <= $targetNasional ? '#c3e6cb' : '#f1b0b7' }};">
-                    <div class="h6 mb-2" style="color: #6c757d;">{{ $data['tahun'] }}</div>
-                    <div class="h4 fw-bold mb-2" 
-                         style="color: {{ $data['persentase'] <= $targetNasional ? '#155724' : '#721c24' }};">
-                        {{ $data['persentase'] }}%
-                    </div>
-                    <small class="text-muted">
-                        @if($loop->index > 0 && isset($historicalData[$loop->index - 1]))
-                            @php
-                                $prev = $historicalData[$loop->index - 1]['persentase'];
-                                $change = $data['persentase'] - $prev;
-                            @endphp
-                            @if($change > 0)
-                                <i class="fas fa-arrow-up text-danger"></i> +{{ number_format($change, 1) }}%
-                            @elseif($change < 0)
-                                <i class="fas fa-arrow-down text-success"></i> {{ number_format($change, 1) }}%
-                            @else
-                                <i class="fas fa-minus text-muted"></i> 0%
+            @if(count($historicalData) > 0)
+                @foreach($historicalData as $data)
+                <div class="col-md mb-3">
+                    <div class="text-center p-3 rounded" 
+                         style="background: {{ $data['persentase'] <= $targetNasional ? '#d4edda' : '#f8d7da' }}; 
+                                border: 1px solid {{ $data['persentase'] <= $targetNasional ? '#c3e6cb' : '#f1b0b7' }};">
+                        <div class="h6 mb-2" style="color: #6c757d;">{{ $data['tahun'] }}</div>
+                        <div class="h4 fw-bold mb-2" 
+                             style="color: {{ $data['persentase'] <= $targetNasional ? '#155724' : '#721c24' }};">
+                            {{ $data['persentase'] }}%
+                        </div>
+                        <small class="text-muted">
+                            @if($loop->index < count($historicalData) - 1)
+                                @php
+                                    $next = $historicalData[$loop->index + 1]['persentase'];
+                                    $change = $data['persentase'] - $next;
+                                @endphp
+                                @if($change > 0)
+                                    <i class="fas fa-arrow-up text-danger"></i> +{{ number_format($change, 1) }}%
+                                @elseif($change < 0)
+                                    <i class="fas fa-arrow-down text-success"></i> {{ number_format($change, 1) }}%
+                                @else
+                                    <i class="fas fa-minus text-muted"></i> 0%
+                                @endif
                             @endif
-                        @endif
-                    </small>
+                        </small>
+                    </div>
                 </div>
-            </div>
-            @endforeach
+                @endforeach
+            @else
+                <div class="col-12 text-center">
+                    <p class="text-muted">Belum ada data historis yang tersedia</p>
+                </div>
+            @endif
         </div>
 
         <div class="row mt-4">
             <div class="col-lg-8 mx-auto">
                 <div class="text-center p-4 rounded" style="background: #f8f9fa; border: 1px solid #dee2e6;">
                     <h5 class="mb-3">Analisis Tren</h5>
+                    @if(count($historicalData) >= 2)
                     @php
-                        $firstYear = $historicalData[0]['persentase'] ?? 0;
-                        $lastYear = end($historicalData)['persentase'] ?? 0;
+                        $firstData = end($historicalData); // Data tahun tertua
+                        $lastData = $historicalData[0];    // Data tahun terbaru
+                        $firstYear = $firstData['persentase'] ?? 0;
+                        $lastYear = $lastData['persentase'] ?? 0;
                         $totalChange = $lastYear - $firstYear;
                     @endphp
                     <p class="mb-0">
-                        Dalam 5 tahun terakhir, persentase stunting 
+                        Dalam {{ count($historicalData) }} tahun terakhir, persentase stunting 
                         @if($totalChange > 0)
-                            <strong class="text-danger">meningkat {{ number_format($totalChange, 1) }}%</strong>
+                            <strong class="text-danger">meningkat {{ number_format(abs($totalChange), 1) }}%</strong>
                         @elseif($totalChange < 0)
                             <strong class="text-success">menurun {{ number_format(abs($totalChange), 1) }}%</strong>
                         @else
@@ -542,6 +551,9 @@
                         @endif
                         dari {{ $firstYear }}% menjadi {{ $lastYear }}%.
                     </p>
+                    @else
+                    <p class="mb-0">Belum cukup data untuk menganalisis tren. Minimal diperlukan data dari 2 tahun yang berbeda.</p>
+                    @endif
                 </div>
             </div>
         </div>

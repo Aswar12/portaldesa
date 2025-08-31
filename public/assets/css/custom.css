@@ -101,6 +101,71 @@
     border: none;
 }
 
+/* Stunting Statistics Section */
+.stunting-stats-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 60px 0;
+    margin-top: 0;
+}
+
+.stunting-stats-section .section-title h2 {
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+.stunting-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.stunting-normal {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+}
+
+.stunting-danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+}
+
+.stunting-warning {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    color: white;
+}
+
+.stunting-info {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+}
+
+.stunting-info-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #e74c3c;
+}
+
+.stunting-info-card h4 {
+    color: #e74c3c;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.btn-link {
+    color: #e74c3c;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-link:hover {
+    color: #c0392b;
+    border-bottom-color: #c0392b;
+}
+
 .copyright {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.9rem;

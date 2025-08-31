@@ -22,7 +22,9 @@ class Anggaran extends Model
         'tahun_anggaran',
         'kategori',
         'deskripsi',
-        'user_id'
+        'user_id',
+        'tampil_infografis',
+        'warna_chart'
     ];
 
     protected $casts = [

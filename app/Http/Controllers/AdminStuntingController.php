@@ -95,6 +95,7 @@ class AdminStuntingController extends Controller
             $data['gambar'] = $file->storeAs($path, $fileName, 'public');
         }
 
+        // Buat record baru
         Stunting::create($data);
 
         return redirect()->route('admin.stunting.index')

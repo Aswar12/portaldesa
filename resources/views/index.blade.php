@@ -125,6 +125,84 @@
     </div>
 </section><!-- End Statistik Penduduk Section -->
 
+<!-- ======= Statistik Stunting Section ======= -->
+<section id="stunting-stats" class="stunting-stats-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Data Status Gizi Balita</h2>
+            <p>Monitoring dan evaluasi status gizi balita untuk pencegahan stunting</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <!-- Total Balita Dipantau -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card stunting-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $totalBalitaStunting ?? 150 }}">0</span>
+                    <div class="stat-label">Total Balita Dipantau</div>
+                </div>
+            </div>
+            
+            <!-- Balita Normal -->
+            <div class="col-lg-2 col-md-6 mb-4">
+                <div class="stat-card stunting-normal">
+                    <div class="stat-icon">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $balitaNormal ?? 120 }}">0</span>
+                    <div class="stat-label">Balita Normal</div>
+                </div>
+            </div>
+            
+            <!-- Balita Stunting -->
+            <div class="col-lg-2 col-md-6 mb-4">
+                <div class="stat-card stunting-danger">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $balitaStunting ?? 15 }}">0</span>
+                    <div class="stat-label">Balita Stunting</div>
+                </div>
+            </div>
+            
+            <!-- Balita Kurus -->
+            <div class="col-lg-2 col-md-6 mb-4">
+                <div class="stat-card stunting-warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $balitaKurus ?? 10 }}">0</span>
+                    <div class="stat-label">Balita Kurus</div>
+                </div>
+            </div>
+            
+            <!-- Balita Gemuk -->
+            <div class="col-lg-2 col-md-6 mb-4">
+                <div class="stat-card stunting-info">
+                    <div class="stat-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <span class="stat-number" data-count="{{ $balitaGemuk ?? 5 }}">0</span>
+                    <div class="stat-label">Balita Gemuk</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-8">
+                <div class="stunting-info-card">
+                    <h4>Informasi Penting</h4>
+                    <p>Data status gizi balita ini diperbarui secara berkala berdasarkan hasil pemantauan di Posyandu dan Puskesmas. 
+                    Untuk informasi lebih detail, silakan kunjungi halaman 
+                    <a href="{{ route('infografis.stunting') }}" class="btn-link">Infografis Stunting</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- End Statistik Stunting Section -->
+
 <!-- ======= Services Section ======= -->
 <section id="services" class="services">
   <div class="container" data-aos="fade-up">

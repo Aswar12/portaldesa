@@ -9,6 +9,7 @@ use App\Models\Berita;
 use App\Models\VideoProfil;
 use App\Models\Penduduk;
 use App\Models\Umkm;
+use App\Models\Stunting;
 
 class BerandaController extends Controller
 {
@@ -38,6 +39,26 @@ class BerandaController extends Controller
                      ->orWhere('pekerjaan', 'LIKE', '%Tani%')
                      ->count();
             
+            // Get latest stunting data
+            $stuntingData = Stunting::where('tampil_infografis', true)
+                           ->orderBy('tahun', 'DESC')
+                           ->orderBy('id', 'DESC')
+                           ->first();
+            
+            $balitaStunting = 0;
+            $balitaNormal = 0;
+            $balitaKurus = 0;
+            $balitaGemuk = 0;
+            $totalBalitaStunting = 0;
+            
+            if ($stuntingData) {
+                $balitaStunting = $stuntingData->balita_stunting;
+                $balitaNormal = $stuntingData->balita_normal;
+                $balitaKurus = $stuntingData->balita_kurus;
+                $balitaGemuk = $stuntingData->balita_gemuk;
+                $totalBalitaStunting = $stuntingData->total_balita;
+            }
+            
             // If no data in database, use default values for demo
             if ($totalPenduduk == 0) {
                 $totalPenduduk = 2456;
@@ -48,6 +69,15 @@ class BerandaController extends Controller
                 $lansia = 198;
                 $balita = 165;
                 $petani = 428;
+                
+                // Default stunting data when no database data exists
+                if (!$stuntingData) {
+                    $balitaStunting = 15;
+                    $balitaNormal = 120;
+                    $balitaKurus = 10;
+                    $balitaGemuk = 5;
+                    $totalBalitaStunting = 150;
+                }
             }
             
             // Calculate village area (you can adjust this value or get from config)
@@ -67,6 +97,13 @@ class BerandaController extends Controller
                 'lansia'            => $lansia,
                 'balita'            => $balita,
                 'petani'            => $petani,
+                
+                // Stunting data
+                'balitaStunting'    => $balitaStunting,
+                'balitaNormal'      => $balitaNormal,
+                'balitaKurus'       => $balitaKurus,
+                'balitaGemuk'       => $balitaGemuk,
+                'totalBalitaStunting' => $totalBalitaStunting,
                 
                 // Legacy variable names for compatibility
                 'total_penduduk'    => $totalPenduduk,
@@ -99,6 +136,13 @@ class BerandaController extends Controller
                 'lansia'            => 198,
                 'balita'            => 165,
                 'petani'            => 428,
+                
+                // Default stunting data
+                'balitaStunting'    => 15,
+                'balitaNormal'      => 120,
+                'balitaKurus'       => 10,
+                'balitaGemuk'       => 5,
+                'totalBalitaStunting' => 150,
                 
                 // Legacy variables
                 'total_penduduk'    => 2456,

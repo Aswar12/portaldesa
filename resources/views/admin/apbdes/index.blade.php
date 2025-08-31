@@ -96,84 +96,86 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($anggarans as $anggaran)
-                                        <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input class="form-check-input row-checkbox" type="checkbox" 
-                                                           value="{{ $anggaran->id }}" id="check{{ $anggaran->id }}">
-                                                    <label class="form-check-label" for="check{{ $anggaran->id }}"></label>
-                                                </div>
-                                            </td>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>
-                                                @if($anggaran->gambar)
-                                                    <img src="{{ asset('storage/' . $anggaran->gambar) }}" 
-                                                         alt="Gambar {{ $anggaran->judul }}"
-                                                         class="img-fluid rounded" 
-                                                         style="max-height: 80px; max-width: 80px; object-fit: cover;">
-                                                @else
-                                                    <div class="bg-light rounded d-flex align-items-center justify-content-center"
-                                                         style="width: 80px; height: 80px;">
-                                                        <i class="fas fa-image text-muted"></i>
+                                    @if($anggarans && $anggarans->count() > 0)
+                                        @foreach ($anggarans as $anggaran)
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input row-checkbox" type="checkbox" 
+                                                               value="{{ $anggaran->id }}" id="check{{ $anggaran->id }}">
+                                                        <label class="form-check-label" for="check{{ $anggaran->id }}"></label>
                                                     </div>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <strong>{{ Str::limit($anggaran->judul, 40) }}</strong>
-                                                @if($anggaran->kategori)
-                                                    <br><small class="text-muted">{{ $anggaran->kategori }}</small>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <span class="badge 
-                                                    @if($anggaran->jenis == 'pendapatan') bg-success 
-                                                    @elseif($anggaran->jenis == 'belanja') bg-danger 
-                                                    @else bg-warning @endif">
-                                                    {{ ucfirst($anggaran->jenis) }}
-                                                </span>
-                                            </td>
-                                            <td>{{ $anggaran->tahun_anggaran }}</td>
-                                            <td>{{ $anggaran->jumlah_formatted }}</td>
-                                            <td>{{ $anggaran->realisasi_formatted }}</td>
-                                            <td class="text-center">
-                                                @if($anggaran->tampil_infografis)
-                                                    <span class="badge bg-success">
-                                                        <i class="fas fa-chart-bar me-1"></i>Ya
+                                                </td>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>
+                                                    @if($anggaran->gambar)
+                                                        <img src="{{ asset('storage/' . $anggaran->gambar) }}" 
+                                                             alt="Gambar {{ $anggaran->judul }}"
+                                                             class="img-fluid rounded" 
+                                                             style="max-height: 80px; max-width: 80px; object-fit: cover;">
+                                                    @else
+                                                        <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                                             style="width: 80px; height: 80px;">
+                                                            <i class="fas fa-image text-muted"></i>
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <strong>{{ Str::limit($anggaran->judul, 40) }}</strong>
+                                                    @if($anggaran->kategori)
+                                                        <br><small class="text-muted">{{ $anggaran->kategori }}</small>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="badge 
+                                                        @if($anggaran->jenis == 'pendapatan') bg-success 
+                                                        @elseif($anggaran->jenis == 'belanja') bg-danger 
+                                                        @else bg-warning @endif">
+                                                        {{ ucfirst($anggaran->jenis) }}
                                                     </span>
-                                                @else
-                                                    <span class="badge bg-secondary">Tidak</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="/apbdes/{{ $anggaran->slug }}" 
-                                                       target="_blank" 
-                                                       class="btn btn-success btn-sm" 
-                                                       title="Lihat">
-                                                        <i class="ti ti-eye"></i>
-                                                    </a>
-                                                    <a href="/admin/apbdes/{{ $anggaran->id }}/edit" 
-                                                       class="btn btn-warning btn-sm" 
-                                                       title="Edit">
-                                                        <i class="ti ti-edit"></i>
-                                                    </a>
-                                                    <form id="delete-{{ $anggaran->id }}" 
-                                                          action="/admin/apbdes/{{ $anggaran->id }}"
-                                                          method="POST" class="d-inline">
-                                                        @method('delete')
-                                                        @csrf
-                                                        <button type="button" 
-                                                                class="btn btn-danger btn-sm swal-confirm" 
-                                                                data-form="delete-{{ $anggaran->id }}"
-                                                                title="Hapus">
-                                                            <i class="ti ti-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
+                                                </td>
+                                                <td>{{ $anggaran->tahun_anggaran }}</td>
+                                                <td>{{ $anggaran->jumlah_formatted ?? 'Rp 0' }}</td>
+                                                <td>{{ $anggaran->realisasi_formatted ?? 'Rp 0' }}</td>
+                                                <td class="text-center">
+                                                    @if(isset($anggaran->tampil_infografis) && $anggaran->tampil_infografis)
+                                                        <span class="badge bg-success">
+                                                            <i class="fas fa-chart-bar me-1"></i>Ya
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-secondary">Tidak</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a href="/apbdes/{{ $anggaran->slug }}" 
+                                                           target="_blank" 
+                                                           class="btn btn-success btn-sm" 
+                                                           title="Lihat">
+                                                            <i class="ti ti-eye"></i>
+                                                        </a>
+                                                        <a href="/admin/apbdes/{{ $anggaran->id }}/edit" 
+                                                           class="btn btn-warning btn-sm" 
+                                                           title="Edit">
+                                                            <i class="ti ti-edit"></i>
+                                                        </a>
+                                                        <form id="delete-{{ $anggaran->id }}" 
+                                                              action="/admin/apbdes/{{ $anggaran->id }}"
+                                                              method="POST" class="d-inline">
+                                                            @method('delete')
+                                                            @csrf
+                                                            <button type="button" 
+                                                                    class="btn btn-danger btn-sm swal-confirm" 
+                                                                    data-form="delete-{{ $anggaran->id }}"
+                                                                    title="Hapus">
+                                                                <i class="ti ti-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
                                             <td colspan="10" class="text-center py-4">
                                                 <div class="text-muted">
@@ -185,7 +187,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endforelse
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -204,25 +206,54 @@
 
     <script>
         $(document).ready(function() {
-            $('#table_id').DataTable({
-                "pageLength": 25,
-                "responsive": true,
-                "language": {
-                    "url": "/assets/i18n/Indonesian.json"
-                },
-                "columnDefs": [
-                    { "orderable": false, "targets": [0, 2, 9] } // Disable sorting for checkbox, image and action columns
-                ]
-            });
+            // Delay DataTable initialization to ensure DOM is fully loaded
+            setTimeout(function() {
+                $('#table_id').DataTable({
+                    "pageLength": 25,
+                    "responsive": false,
+                    "autoWidth": false,
+                    "processing": true,
+                    "language": {
+                        "emptyTable": "Tidak ada data yang tersedia",
+                        "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                        "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+                        "infoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+                        "lengthMenu": "Tampilkan _MENU_ entri",
+                        "loadingRecords": "Sedang memuat...",
+                        "processing": "Sedang memproses...",
+                        "search": "Cari:",
+                        "zeroRecords": "Tidak ditemukan data yang sesuai",
+                        "paginate": {
+                            "first": "Pertama",
+                            "last": "Terakhir",
+                            "next": "Selanjutnya",
+                            "previous": "Sebelumnya"
+                        }
+                    },
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0, 2, 9] }, // Disable sorting for checkbox, image and action columns
+                        { "width": "3%", "targets": 0 },
+                        { "width": "5%", "targets": 1 },
+                        { "width": "10%", "targets": 2 },
+                        { "width": "20%", "targets": 3 },
+                        { "width": "10%", "targets": 4 },
+                        { "width": "8%", "targets": 5 },
+                        { "width": "12%", "targets": 6 },
+                        { "width": "12%", "targets": 7 },
+                        { "width": "8%", "targets": 8 },
+                        { "width": "15%", "targets": 9 }
+                    ]
+                });
+            }, 100);
 
             // Select All functionality
-            $('#selectAll').change(function() {
+            $(document).on('change', '#selectAll', function() {
                 $('.row-checkbox').prop('checked', this.checked);
                 updateSelectedCount();
             });
 
             // Individual checkbox change
-            $('.row-checkbox').change(function() {
+            $(document).on('change', '.row-checkbox', function() {
                 updateSelectedCount();
                 
                 // Update select all checkbox
@@ -328,7 +359,7 @@
         });
 
         // SweetAlert for individual delete confirmation
-        $('.swal-confirm').click(function(e) {
+        $(document).on('click', '.swal-confirm', function(e) {
             e.preventDefault();
             var form = $(this).data('form');
             Swal.fire({

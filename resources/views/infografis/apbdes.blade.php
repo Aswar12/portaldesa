@@ -250,7 +250,7 @@
     left: 0;
     right: 0;
     height: 5px;
-    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #fa709a, #43e97b);
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
     border-radius: 20px 20px 0 0;
 }
 
@@ -579,15 +579,15 @@
                 <div class="chart-stats">
                     <div class="chart-stats-grid">
                         <div class="stat-item">
-                            <div class="stat-value" style="color: #43e97b;">{{ number_format((($totalPendapatan ?? 0)/($totalAnggaran ?? 1))*100, 1) }}%</div>
+                            <div class="stat-value" style="color: #667eea;">{{ number_format((($totalPendapatan ?? 0)/($totalAnggaran ?? 1))*100, 1) }}%</div>
                             <div class="stat-label">Pendapatan</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value" style="color: #f093fb;">{{ number_format((($totalBelanja ?? 0)/($totalAnggaran ?? 1))*100, 1) }}%</div>
+                            <div class="stat-value" style="color: #764ba2;">{{ number_format((($totalBelanja ?? 0)/($totalAnggaran ?? 1))*100, 1) }}%</div>
                             <div class="stat-label">Belanja</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value" style="color: #fa709a;">{{ number_format((($totalPembiayaan ?? 0)/($totalAnggaran ?? 1))*100, 1) }}%</div>
+                            <div class="stat-value" style="color: #5a7fd8;">{{ number_format((($totalPembiayaan ?? 0)/($totalAnggaran ?? 1))*100, 1) }}%</div>
                             <div class="stat-label">Pembiayaan</div>
                         </div>
                     </div>
@@ -611,11 +611,11 @@
                             <div class="stat-label">Total Anggaran</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value" style="color: #43e97b;">Rp {{ number_format($totalRealisasi ?? 0, 0, ',', '.') }}</div>
+                            <div class="stat-value" style="color: #764ba2;">Rp {{ number_format($totalRealisasi ?? 0, 0, ',', '.') }}</div>
                             <div class="stat-label">Total Realisasi</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value" style="color: #ff6b6b;">{{ number_format($persentaseRealisasi ?? 0, 1) }}%</div>
+                            <div class="stat-value" style="color: #5a7fd8;">{{ number_format($persentaseRealisasi ?? 0, 1) }}%</div>
                             <div class="stat-label">Persentase</div>
                         </div>
                     </div>

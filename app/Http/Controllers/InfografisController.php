@@ -372,13 +372,14 @@ class InfografisController extends Controller
     public function stunting()
     {
         try {
-            // Ambil data stunting yang ditampilkan di infografis
-            $stuntingData = Stunting::where('tampil_infografis', true)
+            // Ambil semua data stunting, prioritaskan yang tampil di infografis
+            $stuntingData = Stunting::orderBy('tampil_infografis', 'DESC')
                 ->orderBy('tahun', 'DESC')
+                ->orderBy('id', 'DESC')
                 ->get();
             
             if ($stuntingData->isNotEmpty()) {
-                // Data dari database
+                // Data dari database - ambil data teratas (prioritas yang tampil_infografis=true)
                 $latestData = $stuntingData->first();
                 $totalBalita = $latestData->total_balita;
                 $normalBalita = $latestData->balita_normal;
@@ -388,7 +389,11 @@ class InfografisController extends Controller
                 $persentaseStunting = $totalBalita > 0 ? ($stuntingBalita / $totalBalita) * 100 : 0;
                 
                 // Historical data dari database
-                $historicalData = $stuntingData->map(function ($item) {
+                // Ambil data historis dari semua data yang ditampilkan di infografis
+                $historicalData = Stunting::where('tampil_infografis', true)
+                    ->orderBy('tahun', 'DESC')
+                    ->get()
+                    ->map(function ($item) {
                     return [
                         'tahun' => $item->tahun,
                         'persentase' => $item->total_balita > 0 ? 
@@ -398,9 +403,7 @@ class InfografisController extends Controller
                 
                 $data = [
                     'totalBalita' => $totalBalita,
-                    'stuntingRingan' => $stuntingBalita,
-                    'stuntingSedang' => 0, // Bisa ditambahkan field baru di model jika diperlukan
-                    'stuntingBerat' => 0,  // Bisa ditambahkan field baru di model jika diperlukan
+                    'balita_stunting' => $stuntingBalita,
                     'normalBalita' => $normalBalita,
                     'kurusBalita' => $kurusBalita,
                     'gemukBalita' => $gemukBalita,
@@ -413,9 +416,7 @@ class InfografisController extends Controller
                 // Fallback data jika belum ada data stunting
                 $data = [
                     'totalBalita' => 0,
-                    'stuntingRingan' => 0,
-                    'stuntingSedang' => 0,
-                    'stuntingBerat' => 0,
+                    'balita_stunting' => 0,
                     'normalBalita' => 0,
                     'kurusBalita' => 0,
                     'gemukBalita' => 0,
@@ -432,9 +433,7 @@ class InfografisController extends Controller
             // Error fallback data
             $data = [
                 'totalBalita' => 0,
-                'stuntingRingan' => 0,
-                'stuntingSedang' => 0,
-                'stuntingBerat' => 0,
+                'balita_stunting' => 0,
                 'normalBalita' => 0,
                 'kurusBalita' => 0,
                 'gemukBalita' => 0,
