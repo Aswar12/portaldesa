@@ -8,6 +8,7 @@
     overflow: hidden;
     padding: 80px 0;
     color: white;
+    margin-top: 80px; /* Add top margin to account for fixed header */
 }
 
 .hero-section::before {
@@ -29,7 +30,7 @@
     margin: -50px 0 40px 0;
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     position: relative;
-    z-index: 10;
+    z-index: 100000; /* Higher than header z-index */
 }
 
 .nav-pills {
@@ -446,7 +447,7 @@
 
 <!-- Hero Section -->
 <section class="hero-section">
-    <div class="container position-relative" style="z-index: 2;">
+    <div class="container position-relative" style="z-index: 100001;">
         <div class="text-center">
             <h1 class="display-3 fw-bold mb-4">
                 INFOGRAFIS DESA {{ strtoupper(config('app.desa_name', 'PORTAL DESA')) }}
@@ -805,6 +806,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 compositionCtx.font = '16px Arial';
                 compositionCtx.fillStyle = '#999';
+                compositionCtx.textAlign = 'center';
                 compositionCtx.fillText('Tidak ada data anggaran', centerX, centerY + 10);
             }
         }
@@ -946,8 +948,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         duration: 2000,
                         easing: 'easeInOutQuart'
                     }
-                }
-            });
+                });
         } else {
             // Display no data message
             const centerX = realizationCanvas.width / 2;
@@ -960,6 +961,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             realizationCtx.font = '16px Arial';
             realizationCtx.fillStyle = '#999';
+            realizationCtx.textAlign = 'center';
             realizationCtx.fillText('Tidak ada data realisasi', centerX, centerY + 10);
         }
     }
