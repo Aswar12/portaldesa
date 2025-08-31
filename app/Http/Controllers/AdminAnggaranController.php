@@ -12,6 +12,11 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class AdminAnggaranController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -98,7 +103,7 @@ class AdminAnggaranController extends Controller
         }
 
         $data = $request->all();
-        $data['user_id'] = auth()->user()->id;
+        $data['user_id'] = auth()->user() ? auth()->user()->id : null;
         $data['realisasi'] = $data['realisasi'] ?? 0;
 
         // Handle gambar upload

@@ -3,23 +3,24 @@
 @section('content')
 <style>
     .slider-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 15px;
+        background: #ffffff;
+        border-radius: 12px;
         overflow: hidden;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s ease;
         position: relative;
-        height: 400px;
-        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+        height: 380px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
     }
 
     .slider-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
 
     .slider-image {
         width: 100%;
-        height: 250px;
+        height: 220px;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -34,41 +35,41 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(45deg, rgba(0,0,0,0.3), transparent);
+        background: linear-gradient(45deg, rgba(0,0,0,0.2), transparent);
         z-index: 1;
     }
 
     .slider-overlay {
         position: absolute;
-        top: 15px;
-        right: 15px;
+        top: 12px;
+        right: 12px;
         z-index: 2;
     }
 
     .slider-badge {
-        background: rgba(255, 255, 255, 0.9);
-        color: #667eea;
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+        color: #374151;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .slider-content {
-        padding: 1.5rem;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        height: 150px;
+        padding: 1.2rem;
+        background: #ffffff;
+        height: 160px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
 
     .slider-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #1a202c;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
         margin-bottom: 0.5rem;
         line-height: 1.4;
         display: -webkit-box;
@@ -78,85 +79,99 @@
     }
 
     .btn-edit {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: #3b82f6;
         border: none;
         color: white;
-        padding: 0.7rem 1.5rem;
-        border-radius: 25px;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
+        font-size: 0.9rem;
     }
 
     .btn-edit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+        background: #2563eb;
         color: white;
         text-decoration: none;
+        transform: translateY(-1px);
     }
 
     .page-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem;
-        border-radius: 15px;
-        color: white;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        color: #374151;
         margin-bottom: 2rem;
         position: relative;
-        overflow: hidden;
-    }
-
-    .page-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 200px;
-        height: 200px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        transform: translate(50px, -50px);
+        border: 1px solid #e5e7eb;
     }
 
     .page-header h5 {
         margin: 0;
-        font-size: 1.8rem;
-        font-weight: 700;
+        font-size: 1.5rem;
+        font-weight: 600;
         position: relative;
         z-index: 1;
+        color: #111827;
     }
 
     .btn-preview {
-        background: rgba(255, 255, 255, 0.2);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        padding: 0.7rem 1.5rem;
-        border-radius: 25px;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        color: #374151;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
         text-decoration: none;
-        backdrop-filter: blur(10px);
     }
 
     .btn-preview:hover {
-        background: rgba(255, 255, 255, 1);
-        color: #667eea;
+        background: #f9fafb;
+        color: #111827;
         text-decoration: none;
-        transform: translateY(-2px);
+        border-color: #9ca3af;
     }
 
     .empty-state {
         text-align: center;
-        padding: 3rem;
-        color: #64748b;
+        padding: 3rem 2rem;
+        color: #6b7280;
+        background: #f9fafb;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
     }
 
     .empty-state i {
-        font-size: 4rem;
+        font-size: 3rem;
         margin-bottom: 1rem;
-        opacity: 0.5;
+        opacity: 0.6;
+        color: #9ca3af;
+    }
+
+    .empty-state h4 {
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .alert {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
     }
 </style>
 
@@ -169,7 +184,7 @@
                     <i class="bi bi-images me-2"></i>
                     Manajemen Slider
                 </h5>
-                <p class="mt-2 mb-0 opacity-75">Kelola gambar slider untuk halaman depan website</p>
+                <p class="mt-2 mb-0 opacity-75">Kelola gambar slider untuk halaman depan website desa</p>
             </div>
             <div class="col-md-6 text-md-end">
                 <a href="/" class="btn btn-preview" target="_blank">
@@ -234,13 +249,20 @@
         <div class="empty-state">
             <i class="bi bi-images"></i>
             <h4>Belum Ada Slider</h4>
-            <p>Tambahkan slider pertama untuk menampilkan konten di halaman depan</p>
+            <p>Tambahkan slider pertama untuk menampilkan konten di halaman depan website desa</p>
             <a href="/admin/slider/create" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-2"></i>
                 Tambah Slider
             </a>
         </div>
     @endif
+</div>
+
+<!-- Copyright Footer -->
+<div class="mt-5 pt-4 border-top">
+    <div class="text-center text-muted">
+        <small>&copy; 2025 Portal Desa. All rights reserved.</small>
+    </div>
 </div>
 
 <script>
