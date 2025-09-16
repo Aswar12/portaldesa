@@ -460,22 +460,32 @@ class InfografisController extends Controller
                 // Ambil tahun terbaru dari data yang aktif
                 $latestYear = $bansosData->first()->tahun;
                 
-                // Filter data berdasarkan tahun terbaru (untuk menghitung statistik tahun ini)
-                $currentYearData = $bansosData->where('tahun', $latestYear);
+                // Hitung total dari SEMUA data aktif (tidak hanya tahun terbaru)
+                $totalPenerima = $bansosData->sum('jumlah_penerima');
+                $totalNominal = $bansosData->sum('jumlah_dana');
                 
-                $totalPenerima = $currentYearData->sum('jumlah_penerima');
-                $totalNominal = $currentYearData->sum('jumlah_dana');
-                
-                // Data berdasarkan jenis bansos untuk tahun terbaru - DINAMIS
+                // Data berdasarkan jenis bansos dari SEMUA tahun - DINAMIS dengan detail tahun
                 $bansosByType = [];
+                $bansosByTypeDetailed = [];
                 $pkh = 0;
                 $blt = 0;
                 $sembako = 0;
                 
-                // Kelompokkan data berdasarkan jenis bansos
-                foreach ($currentYearData->groupBy('jenis_bansos') as $jenis => $data) {
+                // Kelompokkan data berdasarkan jenis bansos dari semua tahun
+                foreach ($bansosData->groupBy('jenis_bansos') as $jenis => $data) {
                     $jumlah = $data->sum('jumlah_penerima');
                     $bansosByType[$jenis] = $jumlah;
+                    
+                    // Detail per tahun untuk setiap jenis
+                    $bansosByTypeDetailed[$jenis] = [];
+                    foreach ($data->groupBy('tahun') as $tahun => $yearData) {
+                        $bansosByTypeDetailed[$jenis][] = [
+                            'tahun' => $tahun,
+                            'jumlah' => $yearData->sum('jumlah_penerima'),
+                            'nominal' => $yearData->sum('jumlah_dana'),
+                            'programs' => $yearData->pluck('judul')->toArray()
+                        ];
+                    }
                     
                     // Tetap maintain variabel lama untuk backward compatibility
                     if (in_array($jenis, ['PKH', 'BPNT'])) {
@@ -517,6 +527,7 @@ class InfografisController extends Controller
                     'blt' => $blt,
                     'sembako' => $sembako,
                     'bansosByType' => $bansosByType,
+                    'bansosByTypeDetailed' => $bansosByTypeDetailed,
                     'bansosInfo' => $bansosInfo,
                     'totalNominal' => $totalNominal,
                     'keluargaMiskin' => round($keluargaMiskin),
@@ -532,6 +543,15 @@ class InfografisController extends Controller
                     'pkh' => 0,
                     'blt' => 0,
                     'sembako' => 0,
+                    'bansosByType' => [],
+                    'bansosInfo' => [
+                        'PKH' => ['color' => 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', 'desc' => 'Program Keluarga Harapan'],
+                        'BPNT' => ['color' => 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', 'desc' => 'Bantuan Pangan Non Tunai'],
+                        'BLT' => ['color' => 'linear-gradient(135deg, #007bff 0%, #6610f2 100%)', 'desc' => 'Bantuan Langsung Tunai'],
+                        'Sembako' => ['color' => 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', 'desc' => 'Bantuan Sembilan Bahan Pokok'],
+                        'BST' => ['color' => 'linear-gradient(135deg, #fd7e14 0%, #ffc107 100%)', 'desc' => 'Bantuan Sosial Tunai'],
+                        'PBI' => ['color' => 'linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%)', 'desc' => 'Penerima Bantuan Iuran'],
+                    ],
                     'totalNominal' => 0,
                     'keluargaMiskin' => 0,
                     'cakupan' => 0,
@@ -550,6 +570,15 @@ class InfografisController extends Controller
                 'pkh' => 0,
                 'blt' => 0,
                 'sembako' => 0,
+                'bansosByType' => [],
+                'bansosInfo' => [
+                    'PKH' => ['color' => 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', 'desc' => 'Program Keluarga Harapan'],
+                    'BPNT' => ['color' => 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', 'desc' => 'Bantuan Pangan Non Tunai'],
+                    'BLT' => ['color' => 'linear-gradient(135deg, #007bff 0%, #6610f2 100%)', 'desc' => 'Bantuan Langsung Tunai'],
+                    'Sembako' => ['color' => 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', 'desc' => 'Bantuan Sembilan Bahan Pokok'],
+                    'BST' => ['color' => 'linear-gradient(135deg, #fd7e14 0%, #ffc107 100%)', 'desc' => 'Bantuan Sosial Tunai'],
+                    'PBI' => ['color' => 'linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%)', 'desc' => 'Penerima Bantuan Iuran'],
+                ],
                 'totalNominal' => 0,
                 'keluargaMiskin' => 0,
                 'cakupan' => 0,

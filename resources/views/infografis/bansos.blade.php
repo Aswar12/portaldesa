@@ -377,8 +377,8 @@
             <div class="alert-title h5">Informasi Bantuan Sosial</div>
             @if($totalPenerima > 0)
                 <p class="alert-text mb-0">
-                    Total {{ number_format($totalPenerima) }} penerima bantuan sosial dengan total nominal 
-                    <strong>Rp {{ number_format($totalNominal) }}</strong> telah disalurkan pada tahun {{ $tahunTerbaru ?? date('Y') }}.
+                    Total {{ number_format($totalPenerima) }} penerima bantuan sosial dengan total nominal
+                    <strong>{{ $totalNominal >= 1000000 ? number_format($totalNominal/1000000, 1) . 'jt' : 'Rp ' . number_format($totalNominal) }}</strong> telah disalurkan pada tahun {{ $tahunTerbaru ?? date('Y') }}.
                     Cakupan bantuan mencapai <strong>{{ number_format($cakupan, 1) }}%</strong> dari keluarga miskin yang terdata.
                 </p>
                 <small class="text-muted d-block mt-2">
@@ -414,14 +414,23 @@
                 <div class="stats-card" style="background: {{ $info['color'] }}; color: white;">
                     <div class="stats-label" style="color: rgba(255,255,255,0.8);">{{ $jenis }}</div>
                     <div class="stats-value" style="color: white;">{{ number_format($jumlah) }}</div>
-                    <div class="stats-description" style="color: rgba(255,255,255,0.9);">{{ $info['desc'] }}</div>
+                    <div class="stats-description" style="color: rgba(255,255,255,0.9);">
+                        {{ $info['desc'] }}
+                        @if(isset($bansosByTypeDetailed[$jenis]))
+                            <br><small style="font-size: 0.8rem; opacity: 0.8;">
+                                @foreach($bansosByTypeDetailed[$jenis] as $detail)
+                                    {{ $detail['tahun'] }}: {{ number_format($detail['jumlah']) }}{{ !$loop->last ? ', ' : '' }}
+                                @endforeach
+                            </small>
+                        @endif
+                    </div>
                 </div>
             @endif
         @endforeach
 
         <div class="stats-card" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white;">
             <div class="stats-label" style="color: rgba(255,255,255,0.8);">Total Nominal</div>
-            <div class="stats-value" style="color: white; font-size: 1.8rem;">Rp {{ number_format($totalNominal/1000000) }}M</div>
+            <div class="stats-value" style="color: white; font-size: 1.8rem;">{{ number_format($totalNominal/1000000) }}jt</div>
             <div class="stats-description" style="color: rgba(255,255,255,0.9);">Total bantuan disalurkan</div>
         </div>
 
@@ -526,7 +535,7 @@
                     <div class="h6 mb-2" style="color: #6c757d;">{{ $data['tahun'] }}</div>
                     <div class="h5 fw-bold mb-1" style="color: #ffc107;">{{ number_format($data['penerima']) }}</div>
                     <div class="small text-muted mb-2">Penerima</div>
-                    <div class="h6 fw-bold" style="color: #28a745;">Rp {{ number_format($data['nominal']/1000000) }}M</div>
+                    <div class="h6 fw-bold" style="color: #28a745;">{{ number_format($data['nominal']/1000000) }}jt</div>
                     <div class="small text-muted">Nominal</div>
                 </div>
             </div>
@@ -557,7 +566,7 @@
                         @else
                             <strong class="text-muted">stagnan</strong>
                         @endif
-                        dengan peningkatan nominal sebesar <strong class="text-primary">Rp {{ number_format($nominalChange/1000000) }} juta</strong>.
+                        dengan peningkatan nominal sebesar <strong class="text-primary">{{ number_format($nominalChange/1000000) }}jt</strong>.
                     </p>
                 </div>
             </div>
