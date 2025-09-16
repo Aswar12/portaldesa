@@ -410,23 +410,23 @@
             padding: 15px 20px !important;
             background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%) !important;
             border-top: 2px solid #667eea !important;
-            border-radius: 15px 15px 0 0 !important;
+            border-radius: 10px 10px 0 0 !important;
             margin-top: 10px !important;
             text-align: center !important;
         }
 
         .mobile-menu-content ul li:last-child a {
             display: inline-block !important;
-            padding: 18px 25px !important;
+            padding: 12px 20px !important;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
             color: white !important;
             text-decoration: none !important;
-            border-radius: 12px !important;
+            border-radius: 10px !important;
             transition: all 0.3s ease !important;
-            font-weight: 700 !important;
-            font-size: 17px !important;
+            font-weight: 600 !important;
+            font-size: 16px !important;
             text-align: center !important;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
             margin: 0 15px !important;
             position: relative !important;
             overflow: hidden !important;
@@ -459,45 +459,50 @@
 /* Enhanced Login Button Styling */
 .mobile-menu-content .login-admin-section {
     flex-shrink: 0;
-    padding: 25px 0 30px 0;
-    border-top: 2px solid #e9ecef;
-    margin-top: 15px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    border-radius: 15px 15px 0 0;
-    position: sticky;
+    padding: 10px 0 15px 0; /* Minimal padding for cleaner look */
+    border-top: 2px solid #667eea;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    border-radius: 8px 8px 0 0;
+    position: fixed; /* Changed to fixed for better visibility */
     bottom: 0;
-    z-index: 10;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    left: 0;
+    right: 0;
+    z-index: 100; /* Higher z-index for better visibility */
+    box-shadow: 0 -2px 15px rgba(102, 126, 234, 0.2);
+    margin-bottom: 0; /* Remove margin bottom */
 }
 
 .mobile-menu-content .login-admin-button {
     display: block;
-    padding: 18px 25px;
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    padding: 15px 25px; /* Slightly larger padding for better touch target */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* More vibrant gradient */
     color: white;
     text-decoration: none;
-    border-radius: 10px;
+    border-radius: 12px; /* Slightly more rounded */
     transition: all 0.3s ease;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 700; /* Bolder font */
+    font-size: 17px; /* Slightly larger font */
     text-align: center;
-    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
-    margin: 0 15px;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); /* More visible shadow */
+    margin: 0 20px; /* More margin for better spacing */
     position: relative;
     overflow: hidden;
-    border: 1px solid #dee2e6;
+    border: 2px solid rgba(255, 255, 255, 0.3); /* More visible border */
+    width: calc(100% - 40px); /* Full width minus margins */
+    box-sizing: border-box; /* Include padding and border in width calculation */
 }
 
 .mobile-menu-content .login-admin-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
-    background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
+    transform: translateY(-3px) scale(1.05); /* More dramatic hover effect */
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
 
 .mobile-menu-content .login-admin-button span {
     position: relative;
     z-index: 2;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .mobile-menu-content .login-admin-button::before {
@@ -507,8 +512,8 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    transition: left 0.6s ease;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.8s ease;
     z-index: 1;
 }
 
@@ -518,25 +523,29 @@
 
 .mobile-menu-content .login-admin-subtitle {
     text-align: center;
-    margin-top: 8px;
-    font-size: 12px;
+    margin-top: 12px;
+    font-size: 13px;
     color: #6c757d;
-    font-weight: 500;
-    opacity: 0.8;
+    font-weight: 600;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* Ensure login button is always visible */
+@keyframes loginButtonGlow {
+    0% {
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        transform: scale(1);
+    }
+    100% {
+        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.8);
+        transform: scale(1.02);
+    }
+}
+
+/* Ensure login button is always visible with proper spacing */
 .mobile-menu-content {
-    padding-bottom: 120px !important; /* Extra space for login button */
-}
-
-.mobile-menu-content .login-admin-section {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    border-top: 3px solid #667eea;
+    padding-bottom: 30px !important; /* Normal padding since login button is now in menu */
 }
 </style>
 
@@ -751,17 +760,14 @@
                     <i class="fas fa-phone" style="margin-right: 10px; color: #6c757d;"></i>Kontak Kami
                 </a></li>
 
-            </ul>
-        </div>
+                <!-- Login Button moved here with 60px top padding -->
+                <li style="padding-top: 60px; border-bottom: none;">
+                    <a href="/login" class="login-admin-button" style="display: block; padding: 15px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 12px; transition: all 0.3s ease; font-weight: 700; font-size: 17px; text-align: center; box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); margin: 0 20px; border: 2px solid rgba(255, 255, 255, 0.3);">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>Masuk
+                    </a>
+                </li>
 
-        <!-- Login Button - Fixed at bottom with enhanced visibility -->
-        <div class="login-admin-section">
-            <a href="/login" class="login-admin-button">
-                <span><i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>Masuk</span>
-            </a>
-            <div class="login-admin-subtitle">
-                Akses Panel Administrator
-            </div>
+            </ul>
         </div>
     </div>
 </div>
