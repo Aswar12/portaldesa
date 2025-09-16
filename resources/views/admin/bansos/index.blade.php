@@ -28,14 +28,35 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="card-title fw-semibold">Data Bantuan Sosial</h5>
-            <a href="{{ route('admin.bansos.create') }}" class="btn btn-primary">
-                <i class="ti ti-plus me-1"></i>Tambah Bansos
-            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ route('infografis.bansos') }}" target="_blank" class="btn btn-info">
+                    <i class="ti ti-chart-line me-1"></i>Lihat Infografis
+                </a>
+                <a href="{{ route('admin.bansos.create') }}" class="btn btn-primary">
+                    <i class="ti ti-plus me-1"></i>Tambah Bansos
+                </a>
+            </div>
         </div>
 
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @php
+            $totalBansos = $bansos->count();
+            $aktivInfografis = $bansos->where('tampil_infografis', true)->count();
+            $tidakAktifInfografis = $totalBansos - $aktivInfografis;
+        @endphp
+
+        @if($tidakAktifInfografis > 0)
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="ti ti-alert-triangle me-2"></i>
+                <strong>Perhatian:</strong> {{ $tidakAktifInfografis }} dari {{ $totalBansos }} data bansos tidak ditampilkan di halaman infografis. 
+                Data tersebut hanya terlihat di halaman admin ini.
+                <br><small>Untuk menampilkan data di infografis, edit data dan aktifkan opsi "Tampilkan di Halaman Infografis"</small>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
@@ -68,6 +89,20 @@
                             </select>
                         </div>
                         <div class="col-md-4">
+                            <label for="tampil_infografis" class="form-label">Filter Status Infografis</label>
+                            <select name="tampil_infografis" id="tampil_infografis" class="form-select">
+                                <option value="">Semua Status</option>
+                                <option value="1" {{ request('tampil_infografis') == '1' ? 'selected' : '' }}>
+                                    Aktif di Infografis
+                                </option>
+                                <option value="0" {{ request('tampil_infografis') == '0' ? 'selected' : '' }}>
+                                    Tidak Aktif di Infografis
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3 align-items-end mt-2">
+                        <div class="col-md-12">
                             <button type="submit" class="btn btn-primary me-2">
                                 <i class="ti ti-filter me-1"></i>Filter
                             </button>
@@ -139,6 +174,27 @@
                                        class="btn btn-warning btn-sm">
                                         <i class="ti ti-edit"></i>
                                     </a>
+                                    @if($item->tampil_infografis)
+                                        <form method="POST" action="{{ route('admin.bansos.toggle-infografis', $item) }}" class="d-inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" 
+                                                    class="btn btn-success btn-sm"
+                                                    title="Nonaktifkan dari Infografis">
+                                                <i class="ti ti-eye-off"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.bansos.toggle-infografis', $item) }}" class="d-inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" 
+                                                    class="btn btn-outline-success btn-sm"
+                                                    title="Aktifkan di Infografis">
+                                                <i class="ti ti-eye"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                     <button type="button" 
                                             class="btn btn-danger btn-sm"
                                             onclick="confirmDelete({{ $item->id }})">

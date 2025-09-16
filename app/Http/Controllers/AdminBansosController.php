@@ -27,6 +27,11 @@ class AdminBansosController extends Controller
             $query->where('jenis_bansos', $request->jenis_bansos);
         }
         
+        // Filter berdasarkan status infografis
+        if ($request->has('tampil_infografis') && $request->tampil_infografis !== '') {
+            $query->where('tampil_infografis', (bool) $request->tampil_infografis);
+        }
+        
         $bansos = $query->orderBy('tahun', 'DESC')
                        ->orderBy('id', 'DESC')
                        ->get();
@@ -207,5 +212,22 @@ class AdminBansosController extends Controller
 
         return redirect()->route('admin.bansos.index')
                        ->with('success', 'Data bansos berhasil dihapus!');
+    }
+
+    /**
+     * Toggle status tampil_infografis
+     */
+    public function toggleInfografis(string $id)
+    {
+        $bansos = Bansos::findOrFail($id);
+        
+        $bansos->update([
+            'tampil_infografis' => !$bansos->tampil_infografis
+        ]);
+
+        $status = $bansos->tampil_infografis ? 'diaktifkan' : 'dinonaktifkan';
+        
+        return redirect()->route('admin.bansos.index')
+                       ->with('success', "Data bansos berhasil {$status} di halaman infografis!");
     }
 }

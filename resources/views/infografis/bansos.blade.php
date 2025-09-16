@@ -375,15 +375,31 @@
         <div class="text-center">
             <i class="fas fa-info-circle alert-icon"></i>
             <div class="alert-title h5">Informasi Bantuan Sosial</div>
-            <p class="alert-text mb-0">
-                Total {{ number_format($totalPenerima) }} penerima bantuan sosial dengan total nominal 
-                <strong>Rp {{ number_format($totalNominal) }}</strong> telah disalurkan pada tahun {{ date('Y') }}.
-                Cakupan bantuan mencapai <strong>{{ number_format($cakupan, 1) }}%</strong> dari keluarga miskin yang terdata.
-            </p>
+            @if($totalPenerima > 0)
+                <p class="alert-text mb-0">
+                    Total {{ number_format($totalPenerima) }} penerima bantuan sosial dengan total nominal 
+                    <strong>Rp {{ number_format($totalNominal) }}</strong> telah disalurkan pada tahun {{ $tahunTerbaru ?? date('Y') }}.
+                    Cakupan bantuan mencapai <strong>{{ number_format($cakupan, 1) }}%</strong> dari keluarga miskin yang terdata.
+                </p>
+                <small class="text-muted d-block mt-2">
+                    <i class="fas fa-database me-1"></i>
+                    Data diambil dari {{ $bansosData->count() ?? 0 }} program bansos yang aktif untuk ditampilkan di infografis
+                </small>
+            @else
+                <p class="alert-text mb-0">
+                    <strong>Belum ada data bantuan sosial yang aktif untuk ditampilkan.</strong><br>
+                    Silakan hubungi admin untuk mengaktifkan data bansos di halaman infografis.
+                </p>
+                <small class="text-muted d-block mt-2">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Data akan muncul setelah admin mengaktifkan opsi "Tampilkan di Halaman Infografis" pada data bansos
+                </small>
+            @endif
         </div>
     </div>
 
     <!-- Main Stats Grid -->
+    @if($totalPenerima > 0)
     <div class="stats-grid">
         <div class="stats-card featured">
             <div class="stats-label">Total Penerima</div>
@@ -391,23 +407,17 @@
             <div class="stats-description">Keluarga penerima bantuan</div>
         </div>
 
-        <div class="stats-card pkh">
-            <div class="stats-label">PKH</div>
-            <div class="stats-value">{{ number_format($pkh) }}</div>
-            <div class="stats-description">Program Keluarga Harapan</div>
-        </div>
-
-        <div class="stats-card blt">
-            <div class="stats-label">BLT</div>
-            <div class="stats-value">{{ number_format($blt) }}</div>
-            <div class="stats-description">Bantuan Langsung Tunai</div>
-        </div>
-
-        <div class="stats-card sembako">
-            <div class="stats-label">Sembako</div>
-            <div class="stats-value">{{ number_format($sembako) }}</div>
-            <div class="stats-description">Bantuan Sembilan Bahan Pokok</div>
-        </div>
+        <!-- Dynamic cards for each bansos type -->
+        @foreach($bansosByType as $jenis => $jumlah)
+            @if($jumlah > 0)
+                @php $info = $bansosInfo[$jenis] ?? ['color' => 'linear-gradient(135deg, #6c757d 0%, #495057 100%)', 'desc' => 'Bantuan Sosial'] @endphp
+                <div class="stats-card" style="background: {{ $info['color'] }}; color: white;">
+                    <div class="stats-label" style="color: rgba(255,255,255,0.8);">{{ $jenis }}</div>
+                    <div class="stats-value" style="color: white;">{{ number_format($jumlah) }}</div>
+                    <div class="stats-description" style="color: rgba(255,255,255,0.9);">{{ $info['desc'] }}</div>
+                </div>
+            @endif
+        @endforeach
 
         <div class="stats-card" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white;">
             <div class="stats-label" style="color: rgba(255,255,255,0.8);">Total Nominal</div>
@@ -416,11 +426,27 @@
         </div>
 
         <div class="stats-card" style="background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%); color: white;">
-            <div class="stats-label" style="color: rgba(255,255,255,0.8);">Cakupan</div>
+            <div class="stats-label" style="color: rgba(255,255,255,255,0.8);">Cakupan</div>
             <div class="stats-value" style="color: white;">{{ number_format($cakupan, 1) }}%</div>
             <div class="stats-description" style="color: rgba(255,255,255,0.9);">Dari keluarga miskin</div>
         </div>
     </div>
+    @else
+    <!-- No Data Message -->
+    <div class="chart-container">
+        <div class="text-center py-5">
+            <i class="fas fa-database fa-5x text-muted mb-4"></i>
+            <h4 class="text-muted mb-3">Belum Ada Data Bantuan Sosial</h4>
+            <p class="text-muted mb-4">
+                Data bantuan sosial belum tersedia atau belum diaktifkan untuk ditampilkan di halaman infografis.
+            </p>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Informasi:</strong> Admin dapat mengelola dan mengaktifkan data bansos melalui halaman admin untuk ditampilkan di sini.
+            </div>
+        </div>
+    </div>
+    @endif
 
     <!-- Distribution Chart -->
     <div class="chart-container">
@@ -431,35 +457,29 @@
 
         <div class="row">
             <div class="col-lg-6">
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span><i class="fas fa-circle text-success me-2"></i>Program Keluarga Harapan (PKH)</span>
-                        <span>{{ number_format($pkh) }} penerima</span>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" style="width: {{ $totalPenerima > 0 ? ($pkh/$totalPenerima)*100 : 0 }}%"></div>
-                    </div>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span><i class="fas fa-circle text-primary me-2"></i>Bantuan Langsung Tunai (BLT)</span>
-                        <span>{{ number_format($blt) }} penerima</span>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-primary" style="width: {{ $totalPenerima > 0 ? ($blt/$totalPenerima)*100 : 0 }}%"></div>
-                    </div>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span><i class="fas fa-circle text-danger me-2"></i>Bantuan Sembako</span>
-                        <span>{{ number_format($sembako) }} penerima</span>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-danger" style="width: {{ $totalPenerima > 0 ? ($sembako/$totalPenerima)*100 : 0 }}%"></div>
-                    </div>
-                </div>
+                <!-- Dynamic progress bars for each bansos type -->
+                @foreach($bansosByType as $jenis => $jumlah)
+                    @if($jumlah > 0)
+                        @php $info = $bansosInfo[$jenis] ?? ['color' => 'linear-gradient(135deg, #6c757d 0%, #495057 100%)', 'desc' => 'Bantuan Sosial'] @endphp
+                        @php
+                            $colorClass = 'bg-secondary'; // default
+                            if (strpos($info['color'], '28a745') !== false) $colorClass = 'bg-success'; // green for PKH/BPNT
+                            elseif (strpos($info['color'], '007bff') !== false) $colorClass = 'bg-primary'; // blue for BLT
+                            elseif (strpos($info['color'], 'dc3545') !== false) $colorClass = 'bg-danger'; // red for Sembako
+                            elseif (strpos($info['color'], 'fd7e14') !== false) $colorClass = 'bg-warning'; // orange for BST
+                            elseif (strpos($info['color'], '6f42c1') !== false) $colorClass = 'bg-info'; // purple for PBI
+                        @endphp
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span><i class="fas fa-circle text-{{ str_replace('bg-', '', $colorClass) }} me-2"></i>{{ $info['desc'] }} ({{ $jenis }})</span>
+                                <span>{{ number_format($jumlah) }} penerima</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar {{ $colorClass }}" style="width: {{ $totalPenerima > 0 ? ($jumlah/$totalPenerima)*100 : 0 }}%"></div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
             </div>
 
             <div class="col-lg-6">
@@ -469,18 +489,23 @@
                     </div>
                     <h4 class="mb-3">Persentase Distribusi</h4>
                     <div class="row">
-                        <div class="col-4">
-                            <div class="small text-muted mb-1">PKH</div>
-                            <div class="h5 fw-bold text-success">{{ $totalPenerima > 0 ? number_format(($pkh/$totalPenerima)*100, 1) : 0 }}%</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="small text-muted mb-1">BLT</div>
-                            <div class="h5 fw-bold text-primary">{{ $totalPenerima > 0 ? number_format(($blt/$totalPenerima)*100, 1) : 0 }}%</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="small text-muted mb-1">Sembako</div>
-                            <div class="h5 fw-bold text-danger">{{ $totalPenerima > 0 ? number_format(($sembako/$totalPenerima)*100, 1) : 0 }}%</div>
-                        </div>
+                        @foreach($bansosByType as $jenis => $jumlah)
+                            @if($jumlah > 0)
+                                @php
+                                    $percentage = $totalPenerima > 0 ? number_format(($jumlah/$totalPenerima)*100, 1) : 0;
+                                    $colorClass = 'text-secondary'; // default
+                                    if (in_array($jenis, ['PKH', 'BPNT'])) $colorClass = 'text-success';
+                                    elseif ($jenis == 'BLT') $colorClass = 'text-primary';
+                                    elseif ($jenis == 'Sembako') $colorClass = 'text-danger';
+                                    elseif ($jenis == 'BST') $colorClass = 'text-warning';
+                                    elseif ($jenis == 'PBI') $colorClass = 'text-info';
+                                @endphp
+                                <div class="col-{{ count(array_filter($bansosByType, fn($j) => $j > 0)) > 3 ? '6' : '4' }} mb-3">
+                                    <div class="small text-muted mb-1">{{ $jenis }}</div>
+                                    <div class="h5 fw-bold {{ $colorClass }}">{{ $percentage }}%</div>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>

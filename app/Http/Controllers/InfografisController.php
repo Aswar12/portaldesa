@@ -450,33 +450,48 @@ class InfografisController extends Controller
     public function bansos()
     {
         try {
-            // Ambil data bansos yang ditampilkan di infografis
+            // Ambil data bansos yang aktif untuk infografis, urutkan berdasarkan tahun terbaru
             $bansosData = Bansos::where('tampil_infografis', true)
                 ->orderBy('tahun', 'DESC')
+                ->orderBy('id', 'DESC')
                 ->get();
             
             if ($bansosData->isNotEmpty()) {
-                // Total penerima dan dana untuk tahun terbaru
+                // Ambil tahun terbaru dari data yang aktif
                 $latestYear = $bansosData->first()->tahun;
+                
+                // Filter data berdasarkan tahun terbaru (untuk menghitung statistik tahun ini)
                 $currentYearData = $bansosData->where('tahun', $latestYear);
                 
                 $totalPenerima = $currentYearData->sum('jumlah_penerima');
                 $totalNominal = $currentYearData->sum('jumlah_dana');
                 
-                // Data berdasarkan jenis bansos
-                $pkhData = $currentYearData->where('jenis_bansos', 'PKH');
-                $bltData = $currentYearData->where('jenis_bansos', 'BLT');
-                $sembakoData = $currentYearData->where('jenis_bansos', 'Sembako');
+                // Data berdasarkan jenis bansos untuk tahun terbaru - DINAMIS
+                $bansosByType = [];
+                $pkh = 0;
+                $blt = 0;
+                $sembako = 0;
                 
-                $pkh = $pkhData->sum('jumlah_penerima');
-                $blt = $bltData->sum('jumlah_penerima');
-                $sembako = $sembakoData->sum('jumlah_penerima');
+                // Kelompokkan data berdasarkan jenis bansos
+                foreach ($currentYearData->groupBy('jenis_bansos') as $jenis => $data) {
+                    $jumlah = $data->sum('jumlah_penerima');
+                    $bansosByType[$jenis] = $jumlah;
+                    
+                    // Tetap maintain variabel lama untuk backward compatibility
+                    if (in_array($jenis, ['PKH', 'BPNT'])) {
+                        $pkh += $jumlah;
+                    } elseif ($jenis == 'BLT') {
+                        $blt = $jumlah;
+                    } elseif ($jenis == 'Sembako') {
+                        $sembako = $jumlah;
+                    }
+                }
                 
                 // Estimasi keluarga miskin (bisa disesuaikan sesuai data desa)
                 $keluargaMiskin = Penduduk::count() * 0.15; // Asumsi 15% dari total penduduk
                 $cakupan = $keluargaMiskin > 0 ? ($totalPenerima / $keluargaMiskin) * 100 : 0;
                 
-                // Historical data dari database
+                // Historical data dari semua data bansos yang aktif infografis
                 $historicalData = collect();
                 foreach ($bansosData->groupBy('tahun') as $tahun => $yearData) {
                     $historicalData->push([
@@ -486,19 +501,32 @@ class InfografisController extends Controller
                     ]);
                 }
                 
+                // Helper function untuk info bansos
+                $bansosInfo = [
+                    'PKH' => ['color' => 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', 'desc' => 'Program Keluarga Harapan'],
+                    'BPNT' => ['color' => 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', 'desc' => 'Bantuan Pangan Non Tunai'],
+                    'BLT' => ['color' => 'linear-gradient(135deg, #007bff 0%, #6610f2 100%)', 'desc' => 'Bantuan Langsung Tunai'],
+                    'Sembako' => ['color' => 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', 'desc' => 'Bantuan Sembilan Bahan Pokok'],
+                    'BST' => ['color' => 'linear-gradient(135deg, #fd7e14 0%, #ffc107 100%)', 'desc' => 'Bantuan Sosial Tunai'],
+                    'PBI' => ['color' => 'linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%)', 'desc' => 'Penerima Bantuan Iuran'],
+                ];
+                
                 $data = [
                     'totalPenerima' => $totalPenerima,
                     'pkh' => $pkh,
                     'blt' => $blt,
                     'sembako' => $sembako,
+                    'bansosByType' => $bansosByType,
+                    'bansosInfo' => $bansosInfo,
                     'totalNominal' => $totalNominal,
                     'keluargaMiskin' => round($keluargaMiskin),
                     'cakupan' => round($cakupan, 1),
                     'historicalData' => $historicalData->sortBy('tahun')->values()->toArray(),
-                    'tahunTerbaru' => $latestYear
+                    'tahunTerbaru' => $latestYear,
+                    'bansosData' => $bansosData
                 ];
             } else {
-                // Fallback data jika belum ada data bansos
+                // Fallback data jika belum ada data bansos yang aktif untuk infografis
                 $data = [
                     'totalPenerima' => 0,
                     'pkh' => 0,
@@ -508,7 +536,8 @@ class InfografisController extends Controller
                     'keluargaMiskin' => 0,
                     'cakupan' => 0,
                     'historicalData' => [],
-                    'tahunTerbaru' => date('Y')
+                    'tahunTerbaru' => date('Y'),
+                    'bansosData' => collect()
                 ];
             }
             
@@ -525,7 +554,8 @@ class InfografisController extends Controller
                 'keluargaMiskin' => 0,
                 'cakupan' => 0,
                 'historicalData' => [],
-                'tahunTerbaru' => date('Y')
+                'tahunTerbaru' => date('Y'),
+                'bansosData' => collect()
             ];
             
             return view('infografis.bansos', $data);

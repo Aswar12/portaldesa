@@ -267,3 +267,4 @@ Route::resource('/admin/sdgs', AdminSdgsController::class)->names('admin.sdgs');
 
 // Bansos Management
 Route::resource('/admin/bansos', AdminBansosController::class)->names('admin.bansos');
+Route::patch('/admin/bansos/{id}/toggle-infografis', [AdminBansosController::class, 'toggleInfografis'])->name('admin.bansos.toggle-infografis');
