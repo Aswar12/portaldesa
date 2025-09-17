@@ -237,13 +237,14 @@
 
     <!-- Format Number -->
     <script>
+        // Function to format numbers with commas
         function formatNumber(input) {
-            // Remove all non-digit characters except decimal point
+            // Remove all non-digit characters
             let value = input.value.replace(/[^\d]/g, '');
             
-            // Format with commas
+            // Add dots every 3 digits
             if (value) {
-                value = parseInt(value).toLocaleString('id-ID');
+                value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }
             
             // Update input value

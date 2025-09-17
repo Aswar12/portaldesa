@@ -277,8 +277,8 @@ class AdminAnggaranController extends Controller
             return null;
         }
         
-        // Remove any non-numeric characters except for the decimal point
-        $cleaned = preg_replace('/[^0-9.]/', '', $value);
+        // Remove any non-numeric characters (including dots and commas)
+        $cleaned = preg_replace('/\D/', '', $value);
         
         // Ensure it's a valid number
         return is_numeric($cleaned) ? $cleaned : null;
