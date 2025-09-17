@@ -69,6 +69,12 @@ class AdminAnggaranController extends Controller
      */
     public function store(Request $request)
     {
+        // Clean formatted numbers
+        $request->merge([
+            'jumlah' => $this->cleanNumberFormat($request->jumlah),
+            'realisasi' => $this->cleanNumberFormat($request->realisasi),
+        ]);
+
         $validator = Validator::make($request->all(), [
             'judul'         => 'required|string|max:255',
             'slug'          => 'required|unique:anggarans,slug',
@@ -79,7 +85,7 @@ class AdminAnggaranController extends Controller
             'tahun_anggaran'=> 'required|integer|min:2020|max:2030',
             'kategori'      => 'nullable|string|max:255',
             'deskripsi'     => 'nullable|string',
-            'gambar'        => 'nullable|mimes:jpg,png,jpeg|max:2048'
+            'gambar'        => 'required|mimes:jpg,png,jpeg|max:2048'
         ], [
             'judul.required'        => 'Judul wajib diisi!',
             'slug.required'         => 'Slug tidak boleh kosong!',
@@ -91,6 +97,7 @@ class AdminAnggaranController extends Controller
             'realisasi.numeric'     => 'Realisasi harus berupa angka!',
             'tahun_anggaran.required' => 'Tahun anggaran wajib diisi!',
             'tahun_anggaran.integer'  => 'Tahun anggaran harus berupa angka!',
+            'gambar.required'       => 'Gambar APBDES wajib diupload!',
             'gambar.mimes'          => 'Format gambar yang diizinkan: png, jpg, jpeg!',
             'gambar.max'            => 'Ukuran gambar maksimal 2MB!',
             'keterangan.required'   => 'Keterangan wajib diisi!'
@@ -144,6 +151,12 @@ class AdminAnggaranController extends Controller
     {
         $anggaran = Anggaran::findOrFail($id);
         
+        // Clean formatted numbers
+        $request->merge([
+            'jumlah' => $this->cleanNumberFormat($request->jumlah),
+            'realisasi' => $this->cleanNumberFormat($request->realisasi),
+        ]);
+
         $validator = Validator::make($request->all(), [
             'judul'         => 'required|string|max:255',
             'slug'          => 'required|unique:anggarans,slug,' . $id,
@@ -166,6 +179,7 @@ class AdminAnggaranController extends Controller
             'realisasi.numeric'     => 'Realisasi harus berupa angka!',
             'tahun_anggaran.required' => 'Tahun anggaran wajib diisi!',
             'tahun_anggaran.integer'  => 'Tahun anggaran harus berupa angka!',
+            'gambar.required'       => 'Gambar APBDES wajib diupload!',
             'gambar.mimes'          => 'Format gambar yang diizinkan: png, jpg, jpeg!',
             'gambar.max'            => 'Ukuran gambar maksimal 2MB!',
             'keterangan.required'   => 'Keterangan wajib diisi!'
@@ -254,5 +268,14 @@ class AdminAnggaranController extends Controller
     {
         $slug = SlugService::createSlug(Anggaran::class, 'slug', $request->judul);
         return response()->json(['slug' => $slug]);
+    }
+
+    /**
+     * Clean number format
+     */
+    private function cleanNumberFormat($value)
+    {
+        // Remove any non-numeric characters except for the decimal point
+        return preg_replace('/[^0-9.]/', '', $value);
     }
 }

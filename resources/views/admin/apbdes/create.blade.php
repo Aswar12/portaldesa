@@ -76,8 +76,9 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="jumlah" class="form-label">Jumlah Anggaran (Rp) <span style="color: red">*</span></label>
-                                        <input type="number" class="form-control @error('jumlah') is-invalid @enderror" 
-                                               name="jumlah" id="jumlah" value="{{ old('jumlah') }}" min="0" step="1000">
+                                        <input type="text" class="form-control @error('jumlah') is-invalid @enderror" 
+                                               name="jumlah" id="jumlah" value="{{ old('jumlah') }}" 
+                                               placeholder="Contoh: 123.456.789" oninput="formatNumber(this)">
                                         @error('jumlah')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -86,8 +87,9 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="realisasi" class="form-label">Realisasi (Rp)</label>
-                                        <input type="number" class="form-control @error('realisasi') is-invalid @enderror" 
-                                               name="realisasi" id="realisasi" value="{{ old('realisasi', 0) }}" min="0" step="1000">
+                                        <input type="text" class="form-control @error('realisasi') is-invalid @enderror" 
+                                               name="realisasi" id="realisasi" value="{{ old('realisasi', 0) }}" 
+                                               placeholder="Contoh: 123.456.789" oninput="formatNumber(this)">
                                         @error('realisasi')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -132,7 +134,10 @@
                             <div class="mb-3">
                                 <img src="" class="img-preview img-fluid mb-3 mt-2" id="preview"
                                     style="border-radius: 5px; max-height:300px; overflow:hidden; display:none;"><br>
-                                <label for="gambar" class="form-label">Gambar APBDES</label>
+                                <label for="gambar" class="form-label">Gambar APBDES <span style="color: red">*</span></label>
+                                <div class="alert alert-warning py-2 mb-2" role="alert">
+                                    <small><i class="fas fa-exclamation-triangle"></i> <strong>Wajib diisi:</strong> Upload gambar untuk menampilkan data APBDES</small>
+                                </div>
                                 <input class="form-control @error('gambar') is-invalid @enderror" 
                                        type="file" id="gambar" name="gambar" onchange="previewImage()"
                                        accept="image/jpeg,image/png,image/jpg">
@@ -192,6 +197,33 @@
             fetch('/admin/apbdes/slug?judul=' + judul.value)
                 .then(response => response.json())
                 .then(data => slug.value = data.slug)
+        });
+
+        // Function to format numbers with commas
+        function formatNumber(input) {
+            // Remove all non-digit characters except decimal point
+            let value = input.value.replace(/[^\d]/g, '');
+            
+            // Format with commas
+            if (value) {
+                value = parseInt(value).toLocaleString('id-ID');
+            }
+            
+            // Update input value
+            input.value = value;
+        }
+
+        // Initialize formatting on page load for existing values
+        document.addEventListener('DOMContentLoaded', function() {
+            const jumlahInput = document.getElementById('jumlah');
+            const realisasiInput = document.getElementById('realisasi');
+            
+            if (jumlahInput.value) {
+                formatNumber(jumlahInput);
+            }
+            if (realisasiInput.value) {
+                formatNumber(realisasiInput);
+            }
         });
     </script>
 
