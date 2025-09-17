@@ -69,13 +69,12 @@ class AdminAnggaranController extends Controller
      */
     public function store(Request $request)
     {
-        // Clean formatted numbers
-        $request->merge([
-            'jumlah' => $this->cleanNumberFormat($request->jumlah),
-            'realisasi' => $this->cleanNumberFormat($request->realisasi),
-        ]);
+        // Clean formatted numbers before validation
+        $cleanedData = $request->all();
+        $cleanedData['jumlah'] = $this->cleanNumberFormat($request->jumlah);
+        $cleanedData['realisasi'] = $this->cleanNumberFormat($request->realisasi);
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($cleanedData, [
             'judul'         => 'required|string|max:255',
             'slug'          => 'required|unique:anggarans,slug',
             'keterangan'    => 'required',
@@ -109,7 +108,7 @@ class AdminAnggaranController extends Controller
                            ->withInput();
         }
 
-        $data = $request->all();
+        $data = $cleanedData;
         $data['user_id'] = auth()->user() ? auth()->user()->id : null;
         $data['realisasi'] = $data['realisasi'] ?? 0;
 
@@ -151,13 +150,12 @@ class AdminAnggaranController extends Controller
     {
         $anggaran = Anggaran::findOrFail($id);
         
-        // Clean formatted numbers
-        $request->merge([
-            'jumlah' => $this->cleanNumberFormat($request->jumlah),
-            'realisasi' => $this->cleanNumberFormat($request->realisasi),
-        ]);
+        // Clean formatted numbers before validation
+        $cleanedData = $request->all();
+        $cleanedData['jumlah'] = $this->cleanNumberFormat($request->jumlah);
+        $cleanedData['realisasi'] = $this->cleanNumberFormat($request->realisasi);
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($cleanedData, [
             'judul'         => 'required|string|max:255',
             'slug'          => 'required|unique:anggarans,slug,' . $id,
             'keterangan'    => 'required',
@@ -191,7 +189,7 @@ class AdminAnggaranController extends Controller
                            ->withInput();
         }
 
-        $data = $request->all();
+        $data = $cleanedData;
         $data['realisasi'] = $data['realisasi'] ?? 0;
 
         // Handle gambar upload
@@ -275,7 +273,14 @@ class AdminAnggaranController extends Controller
      */
     private function cleanNumberFormat($value)
     {
+        if (is_null($value) || $value === '') {
+            return null;
+        }
+        
         // Remove any non-numeric characters except for the decimal point
-        return preg_replace('/[^0-9.]/', '', $value);
+        $cleaned = preg_replace('/[^0-9.]/', '', $value);
+        
+        // Ensure it's a valid number
+        return is_numeric($cleaned) ? $cleaned : null;
     }
 }
